@@ -1,5 +1,5 @@
 # WP BrowserUpdate
-![Static Badge](https://img.shields.io/badge/Version-v5.1.1-red)
+![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v4.6-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v6.9.1-blue)
@@ -16,11 +16,11 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
 ## Important Notice
-> **Breaking Changes in Version 5.0**
+> **Breaking Changes in Version 5.0.0**
 - Requires **PHP 7.4** or newer.
-- Ensure your hosting is updated to PHP 7.4 before upgrading to version 5.0 or newer.
+- Ensure your hosting is updated to PHP 7.4 before upgrading to version 5.0.0 or newer.
 - Servers running older PHP versions are no longer supported.
-  - If your server is running an earlier PHP version, please [download this version](https://downloads.wordpress.org/plugin/wp-browser-update.4.8.1.zip "Download WP BrowserUpdate from WordPress.org").
+  - If your server is running an earlier PHP version, please download [version 4.8.1](https://downloads.wordpress.org/plugin/wp-browser-update.4.8.1.zip "Download WP BrowserUpdate from WordPress.org").
 
 ## Installation
 ### Installing via WordPress Plugin Search (Recommended)
