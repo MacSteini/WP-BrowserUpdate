@@ -1,5 +1,5 @@
 # WP BrowserUpdate
-![GitHub Release](https://img.shields.io/github/v/Release/macsteini/wp-browserupdate?color=red)
+![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v4.6-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v6.9.1-blue)
