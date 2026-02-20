@@ -1,0 +1,134 @@
+name: Deploy to WordPress.org
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Set to true to simulate deployment without SVN commits"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      confirm_deploy:
+        description: "Type CONFIRM_DEPLOY to allow SVN deployment"
+        required: true
+        type: string
+      deploy_target:
+        description: "Type wordpress-svn to confirm the deploy target"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy Plugin to WordPress SVN
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate Manual Deployment Confirmation
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" != "true" ] && [ "${{ github.event.inputs.dry_run }}" != "false" ]; then
+            echo "Invalid dry_run value. Use true or false."
+            exit 1
+          fi
+          if [ "${{ github.event.inputs.confirm_deploy }}" != "CONFIRM_DEPLOY" ]; then
+            echo "Invalid confirmation phrase. Aborting deployment."
+            exit 1
+          fi
+          if [ "${{ github.event.inputs.deploy_target }}" != "wordpress-svn" ]; then
+            echo "Invalid deployment target confirmation. Aborting deployment."
+            exit 1
+          fi
+          echo "Dry run mode: ${{ github.event.inputs.dry_run }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Determine Plugin Version
+        id: version
+        run: |
+          PLUGIN_VERSION=$(awk -F': *' '/^Stable tag:/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' wp-browser-update/trunk/readme.txt)
+          if [ -z "$PLUGIN_VERSION" ]; then
+            echo "Stable tag was not found in wp-browser-update/trunk/readme.txt"
+            exit 1
+          fi
+          if ! printf '%s' "$PLUGIN_VERSION" | grep -Eq '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            echo "Stable tag has invalid format: $PLUGIN_VERSION"
+            exit 1
+          fi
+          echo "Plugin Version detected: $PLUGIN_VERSION"
+          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> $GITHUB_ENV
+
+      - name: Checkout Full SVN Repository
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          echo "Checking out full SVN repository..."
+          svn checkout https://plugins.svn.wordpress.org/wp-browser-update svn-wordpress --username=$SVN_USERNAME --password=$SVN_PASSWORD --non-interactive
+
+      - name: Deploy trunk/ to WordPress SVN
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          echo "Updating trunk/ on WordPress SVN..."
+          rsync -a --delete wp-browser-update/trunk/ svn-wordpress/trunk/
+
+          echo "Marking deleted files in SVN trunk..."
+          svn status svn-wordpress/trunk | awk '$1 == "!" {print substr($0,9)}' | while IFS= read -r missing_path; do
+            [ -n "$missing_path" ] || continue
+            svn rm "$missing_path" || true
+          done
+
+          echo "Adding updated files to SVN trunk..."
+          svn add --force svn-wordpress/trunk/ || true
+
+          echo "Committing trunk changes to SVN..."
+          cd svn-wordpress
+          if svn status trunk | grep -q '^[AMDR!]'; then
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              echo "Dry run enabled. Skipping SVN trunk commit."
+              svn status trunk
+            else
+              svn commit -m "Deploy: Updated trunk with latest files" --username=$SVN_USERNAME --password=$SVN_PASSWORD --non-interactive
+            fi
+          else
+            echo "No changes in SVN trunk. Skipping commit."
+          fi
+
+      - name: Deploy tag/{Stable tag} to WordPress SVN
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          echo "Deploying plugin version $PLUGIN_VERSION to SVN..."
+
+          if svn ls https://plugins.svn.wordpress.org/wp-browser-update/tags/$PLUGIN_VERSION > /dev/null 2>&1; then
+            echo "Tag $PLUGIN_VERSION already exists in SVN. Skipping tag deployment."
+            exit 0
+          fi
+
+          echo "Copying all trunk files to the new SVN tag ($PLUGIN_VERSION)..."
+          mkdir -p svn-wordpress/tags/$PLUGIN_VERSION
+          rsync -a svn-wordpress/trunk/ svn-wordpress/tags/$PLUGIN_VERSION/
+
+          echo "Adding files to SVN tag..."
+          svn add --force svn-wordpress/tags/$PLUGIN_VERSION/ || true
+
+          echo "Committing new tag to SVN..."
+          cd svn-wordpress
+          if svn status "tags/$PLUGIN_VERSION" | grep -q '^[AMDR!]'; then
+            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+              echo "Dry run enabled. Skipping SVN tag commit."
+              svn status "tags/$PLUGIN_VERSION"
+            else
+              svn commit -m "Deploy: Tagged version $PLUGIN_VERSION" --username=$SVN_USERNAME --password=$SVN_PASSWORD --non-interactive
+            fi
+          else
+            echo "No changes in SVN tag $PLUGIN_VERSION. Skipping commit."
+          fi
