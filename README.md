@@ -17,11 +17,20 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details about the
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
+## How It Works
+WP BrowserUpdate bundles browser-update.org detection logic for WordPress. After activation, the plugin loads the local notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when the bundled detection logic matches a browser to your settings.
+
+The settings page is available under **Settings > WP BrowserUpdate**. You can define browser versions for every browser key supported by the bundled browser-update.org runtime, choose where the message appears and which element should contain it, enable testing mode, decide whether mobile or unsupported browsers should be notified, customise links, language and message text, and add trusted custom CSS for the notification.
+
+Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to the bundled runtime instead of being reduced to their major version. A value of `0` uses the default bundled outdated-browser detection. Negative whole numbers are passed to the bundled runtime as relative offsets from the current version checked by the plugin.
+
+Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to the bundled runtime so the two browsers can use different thresholds.
+
 ## Important Notice
 > **Breaking Changes in Version 6.0.0**
-- Version 6.0.0 introduces a new structured settings model to support the full browser-update.org customisation surface.
+- Version 6.0.0 introduces a new structured settings model to support the browser-update.org customisation surface used by WP BrowserUpdate.
+- Version 6.0.0 also moves the visitor-facing browser-update.org runtime into the plugin package so strict Content Security Policies and tracker blockers no longer need to allow scripts from `browser-update.org`.
 - Existing WP BrowserUpdate settings from version 5.x are migrated automatically.
-- [Version 5.2.0](https://downloads.wordpress.org/plugin/wp-browser-update.5.2.0.zip "Download WP BrowserUpdate from WordPress.org") remains available as the final non-breaking CSP-compatible release for users who want local browser-update.org runtime loading without the advanced settings model.
 
 > **Breaking Changes in Version 5.0.0**
 - Requires **PHP 7.4** or newer.
@@ -69,14 +78,9 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     - Replaces the legacy space-separated settings storage with the structured `wp_browserupdate_options` option.
     - Migrates existing `wp_browserupdate_browsers`, `wp_browserupdate_js`, and `wp_browserupdate_css_buorg` values automatically.
     - Removes the old normal-render-path conversion of negative browser versions; values are now passed predictably to the bundled runtime.
+    - Removes developer callback settings from the admin UI and saved settings model.
 - Added:
-    - Adds interface coverage for the full documented browser-update.org customisation surface: all runtime browser keys, `reminderClosed`, `notify_esr`, `noclose`, `nomessage`, `no_permanent_hide`, `container`, `url`, `url_permanent_hide`, `burl`, fixed language, text overrides, and callbacks.
-    - Adds locked runtime visibility for local `jsshowurl`, local runtime `domain`, and `api`, which remain fixed for CSP-compatible bundled runtime loading.
-- Changed:
-    - Keeps the 5.2.0 CSP implementation intact while making `trunk/` the 6.0.0 advanced-settings line.
-    - Stores callback support as global function names rather than arbitrary script bodies for security and CSP compatibility.
-
-### 5.2.0
+    - Adds interface coverage for the browser-update.org customisation options used by WP BrowserUpdate: all runtime browser keys, `reminderClosed`, `notify_esr`, `noclose`, `no_permanent_hide`, `container`, `url`, `url_permanent_hide`, `burl`, fixed language, and text overrides.
 - Changed:
     - Takes the long-postponed step of making the browser-update.org integration CSP-compatible by shipping the complete runtime with the plugin, so sites on shared hosting or strict Content Security Policies no longer need to allow scripts from `browser-update.org`.
     - Adds the required browser-update.org runtime/adaptor asset files intentionally, with upstream source URLs and hashes documented for attribution and review.
@@ -84,7 +88,6 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     - Removes browser-update.org runtime requests from the frontend by loading only same-origin plugin assets.
     - Uses WP BrowserUpdate CSP adapter files for the notification and test-mode scripts so the runtime can avoid generated inline styles.
     - Moves the frontend browser-update.org configuration and notification styles to local, enqueueable assets for better compatibility with stricter Content Security Policies.
-    - Provides the CSP-compatible runtime as a non-breaking release before the advanced 6.0.0 settings model.
     - Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
     - Uses the WordPress Settings API for the admin settings page.
     - Splits admin settings handling into smaller validation, migration and rendering steps.
