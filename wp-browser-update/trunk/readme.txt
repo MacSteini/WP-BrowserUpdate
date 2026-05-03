@@ -5,7 +5,7 @@ Tested up to: 6.9
 Compatible up to: 6.9
 Requires at least: 4.6
 Requires PHP: 7.4
-Stable tag: 5.1.1
+Stable tag: 5.2.0
 License: GPLv3 or later
 License URI: https://gnu.org/licenses/gpl
 
@@ -70,6 +70,17 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 5. Once the installation is complete, click **Activate Plugin** to enable it.
 
 == Changelog ==
+= 5.2.0 =
+* Changed:
+    * Loads the Browser-Update.org service script through the WordPress script queue.
+    * Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
+    * Splits admin settings handling into smaller validation, migration and rendering steps.
+    * Documents the Browser-Update.org service dependency and expected visitor-facing behaviour.
+* Security:
+    * Adds stricter settings validation before saving options.
+    * Sanitizes custom CSS before saving and before frontend output.
+    * Hardens external admin links with `rel="noopener noreferrer"`.
+
 = 5.1.1 =
 * Added:
     * Support for free-text input of browser versions (replaces dropdown selection)
@@ -79,8 +90,6 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     * Admin settings page follows WordPress admin standards
     * Cleaner field structure: Improved markup and consistency of settings form fields
     * Security: Improved sanitization and nonce handling for all settings fields
-    * Hardening: Uses the WordPress HTTP API for remote version checks
-    * Hardening: Loads the Browser-Update.org service script through the WordPress script queue
     * Performance: Fewer unnecessary remote lookups when opening the admin settings page
 * Fixed:
     * Prevented a frontend "Uncaught Error" caused by invalid/unexpected browser version strings by hardening version parsing and normalization. Thanks to @danyloliptuha for pointing out.
