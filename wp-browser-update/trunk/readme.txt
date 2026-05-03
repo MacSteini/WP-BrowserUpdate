@@ -19,13 +19,15 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
 == How it works ==
-WP BrowserUpdate connects WordPress to the Browser-Update.org service. After activation, the plugin loads the Browser-Update.org notification script on public pages and passes your configured browser-version thresholds to that script. The notification is shown only when Browser-Update.org detects a browser that matches your settings.
+WP BrowserUpdate connects WordPress to the Browser-Update.org service. After activation, the plugin loads the bundled Browser-Update.org notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when Browser-Update.org detection logic matches a browser to your settings.
 
 The settings page is available under **Settings > WP BrowserUpdate**. You can define the browser versions that should trigger a notification, choose where the message appears, enable testing mode, decide whether mobile or unsupported browsers should be notified, and add trusted custom CSS for the notification.
 
-Browser version fields accept plain version numbers such as `115` or `115.0.1`. A value of `0` uses the default Browser-Update.org outdated-browser detection. Negative values are migrated to concrete version numbers by checking the latest browser versions from the configured external sources. These checks are cached for 6 hours by default and can be adjusted by developers with the `wpbu_browser_version_cache_hours` filter.
+Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to Browser-Update.org instead of being reduced to their major version; exact comparison depends on Browser-Update.org and the browser key used by that service. A value of `0` uses the default Browser-Update.org outdated-browser detection. Negative whole numbers are migrated to concrete version numbers where a latest-version source is configured. These checks are cached for 6 hours by default and can be adjusted by developers with the `wpbu_browser_version_cache_hours` filter.
 
-This plugin depends on Browser-Update.org for the visitor-facing notification logic. If that external service is blocked or unavailable, the notification may not appear.
+Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to Browser-Update.org so the two browsers can use different thresholds.
+
+This plugin bundles the Browser-Update.org notification scripts and styles to avoid runtime blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. Browser-Update.org remains the upstream source of the detection logic. The unmodified upstream files are included for review, and WP BrowserUpdate uses clearly named CSP adapter files only where the upstream runtime would otherwise generate inline styles.
 
 == Important Notice ==
 **Breaking Changes in Version 5.0**
@@ -72,10 +74,18 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 == Changelog ==
 = 5.2.0 =
 * Changed:
-    * Loads the Browser-Update.org service script through the WordPress script queue.
+    * Takes the long-postponed step of making the Browser-Update.org integration CSP-compatible by shipping the complete runtime with the plugin, so sites on shared hosting or strict Content Security Policies no longer need to allow scripts from `browser-update.org`.
+    * Adds several Browser-Update.org asset files intentionally: unmodified upstream files are included for attribution and review, while clearly named WP BrowserUpdate adapter files remove runtime-generated inline styles.
+    * Loads bundled Browser-Update.org runtime files from the plugin directory through the WordPress script queue.
+    * Includes unmodified upstream Browser-Update.org files with attribution, source URLs and hashes for review.
+    * Uses WP BrowserUpdate CSP adapter files for the notification and test-mode scripts so the runtime can avoid generated inline styles.
+    * Moves the frontend Browser-Update.org configuration and notification styles to local, enqueueable assets for better compatibility with stricter Content Security Policies.
     * Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
+    * Uses the WordPress Settings API for the admin settings page.
     * Splits admin settings handling into smaller validation, migration and rendering steps.
-    * Documents the Browser-Update.org service dependency and expected visitor-facing behaviour.
+    * Documents the browser-update.org service dependency and expected visitor-facing behaviour.
+    * Passes dotted browser versions such as `137.0.3912.63` to browser-update.org without reducing them to major versions.
+    * Adds separate Microsoft Edge and Microsoft Internet Explorer thresholds.
 * Security:
     * Adds stricter settings validation before saving options.
     * Sanitizes custom CSS before saving and before frontend output.

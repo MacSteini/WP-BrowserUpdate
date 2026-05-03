@@ -16,7 +16,10 @@ if (!defined('ABSPATH')) {
 }
 
 define('MIN_PHP_VERSION', '7.4');
-define('WPBU_BROWSER_UPDATE_SCRIPT_URL', 'https://browser-update.org/update.min.js');
+define('WPBU_BROWSER_UPDATE_SCRIPT_FILE', 'assets/browser-update/upstream/update.min.js');
+define('WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE', 'assets/browser-update/update.show.wpbu.min.js');
+define('WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE', 'assets/browser-update/update.test.wpbu.js');
+define('WPBU_BROWSER_UPDATE_STYLE_FILE', 'assets/browser-update/update.show.wpbu.css');
 define('WPBU_BROWSER_UPDATE_API_VERSION', 2026.01);
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<')) {
@@ -28,7 +31,7 @@ if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<')) {
 }
 
 function wpbu_default_browser_versions() {
-	return array('0', '0', '0', '0', '0');
+	return array('0', '0', '0', '0', '0', '0');
 }
 
 function wpbu_default_js_settings() {
@@ -127,23 +130,19 @@ function wpbu_getversion_cached($url, $xpath, $regex = '/\d+(\.\d+)+/', $hours =
 	return $version;
 }
 
-function wpbu_normalize_version_for_buorg($v) {
-	$v = trim((string) $v);
+function wpbu_format_required_version_for_buorg($value) {
+	$value = trim((string) $value);
 
-	if ($v === '') {
+	if ($value === '') {
 		return 0;
 	}
 
-	if (preg_match('/^-?\d+$/', $v)) {
-		return (int) $v;
+	if (preg_match('/^-?\d+$/', $value)) {
+		return (int) $value;
 	}
 
-	if (preg_match('/^\d+(?:\.\d+)+$/', $v)) {
-		return (int) explode('.', $v)[0];
-	}
-
-	if (preg_match('/^-?\d+/', $v, $m)) {
-		return (int) $m[0];
+	if (preg_match('/^\d+(?:\.\d+)+$/', $value)) {
+		return $value;
 	}
 
 	return 0;
@@ -153,7 +152,7 @@ function wpbu_sanitize_version_setting($value) {
 	$value = trim(wpbu_unslash_scalar($value, '0'));
 	$value = preg_replace('/(?!^-)[^0-9.]/', '', $value);
 
-	if (!preg_match('/^-?\d+(\.\d+)*$/', $value)) {
+	if (!preg_match('/^-?\d+$|^\d+(?:\.\d+)+$/', $value)) {
 		return '0';
 	}
 
@@ -185,19 +184,25 @@ function wpbu_sanitize_custom_css($css) {
 }
 
 function wpbu_get_browser_configs($selected_values) {
-	$selected_values = array_pad($selected_values, 5, '0');
+	$selected_values = array_pad($selected_values, count(wpbu_browser_field_order()), '0');
+	$selected = array_combine(wpbu_browser_field_order(), array_slice($selected_values, 0, count(wpbu_browser_field_order())));
 
 	return array(
-		'msie'    => array(
+		'edge'    => array(
 			'name'     => 'Microsoft Edge',
-			'selected' => $selected_values[0],
+			'selected' => $selected['edge'],
 			'download' => 'https://microsoft.com/edge',
 			'url'      => 'https://en.wikipedia.org/wiki/Microsoft_Edge',
 			'xpath'    => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td",
 		),
+		'msie'    => array(
+			'name'     => 'Microsoft Internet Explorer',
+			'selected' => $selected['msie'],
+			'download' => 'https://support.microsoft.com/windows/internet-explorer-help-23360e49-9cd3-4dda-ba52-705336cc0de2',
+		),
 		'firefox' => array(
 			'name'     => 'Mozilla Firefox',
-			'selected' => $selected_values[1],
+			'selected' => $selected['firefox'],
 			'download' => 'https://firefox.com/',
 			'url'      => 'https://en.wikipedia.org/wiki/Firefox',
 			'xpath'    => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[text()='Standard']]/td",
@@ -205,14 +210,14 @@ function wpbu_get_browser_configs($selected_values) {
 		),
 		'opera'   => array(
 			'name'     => 'Opera',
-			'selected' => $selected_values[2],
+			'selected' => $selected['opera'],
 			'download' => 'https://opera.com/',
 			'url'      => 'https://en.wikipedia.org/wiki/Opera_(web_browser)',
 			'xpath'    => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release']]/td",
 		),
 		'safari'  => array(
 			'name'     => 'Apple Safari',
-			'selected' => $selected_values[3],
+			'selected' => $selected['safari'],
 			'download' => 'https://support.apple.com/102665',
 			'url'      => 'https://support.apple.com/en-us/100100',
 			'xpath'    => "(//a[starts-with(normalize-space(.), 'Safari ')])[1]",
@@ -220,7 +225,7 @@ function wpbu_get_browser_configs($selected_values) {
 		),
 		'google'  => array(
 			'name'     => 'Google Chrome',
-			'selected' => $selected_values[4],
+			'selected' => $selected['google'],
 			'download' => 'https://chrome.google.com/',
 			'url'      => 'https://en.wikipedia.org/wiki/Google_Chrome',
 			'xpath'    => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td",
@@ -228,10 +233,18 @@ function wpbu_get_browser_configs($selected_values) {
 	);
 }
 
+function wpbu_browser_field_order() {
+	return array('edge', 'firefox', 'opera', 'safari', 'google', 'msie');
+}
+
+function wpbu_js_setting_keys() {
+	return array('wpbu_reminder', 'wpbu_testing', 'wpbu_newwindow', 'wpbu_style', 'wpbu_secis', 'wpbu_unsup', 'wpbu_mobile', 'wpbu_shift');
+}
+
 function wpbu_get_browser_versions_option() {
 	$values = explode(' ', get_option('wp_browserupdate_browsers', implode(' ', wpbu_default_browser_versions())));
 
-	return array_pad($values, 5, '0');
+	return array_slice(array_pad($values, count(wpbu_browser_field_order()), '0'), 0, count(wpbu_browser_field_order()));
 }
 
 function wpbu_get_js_settings_option() {
@@ -254,11 +267,12 @@ function wpbu_get_buoop_config() {
 
 	return array(
 		'required'        => array(
-			'e' => wpbu_normalize_version_for_buorg($raw[0]),
-			'f' => wpbu_normalize_version_for_buorg($raw[1]),
-			'o' => wpbu_normalize_version_for_buorg($raw[2]),
-			's' => wpbu_normalize_version_for_buorg($raw[3]),
-			'c' => wpbu_normalize_version_for_buorg($raw[4]),
+			'e' => wpbu_format_required_version_for_buorg($raw[0]),
+			'f' => wpbu_format_required_version_for_buorg($raw[1]),
+			'o' => wpbu_format_required_version_for_buorg($raw[2]),
+			's' => wpbu_format_required_version_for_buorg($raw[3]),
+			'c' => wpbu_format_required_version_for_buorg($raw[4]),
+			'i' => wpbu_format_required_version_for_buorg($raw[5]),
 		),
 		'reminder'        => (int) $js[0],
 		'test'            => $js[1] === 'true',
@@ -268,51 +282,114 @@ function wpbu_get_buoop_config() {
 		'unsupported'     => $js[5] === 'true',
 		'mobile'          => $js[6] === 'true',
 		'shift_page_down' => $js[7] === 'true',
+		'jsshowurl'       => plugins_url(WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE, __FILE__),
+		'domain'          => untrailingslashit(dirname(plugins_url(WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE, __FILE__))),
 		'api'             => WPBU_BROWSER_UPDATE_API_VERSION,
 	);
 }
 
 function wpbu_enqueue_browserupdate() {
-	wp_enqueue_script('wp-browser-update-browserupdate', WPBU_BROWSER_UPDATE_SCRIPT_URL, array(), null, true);
-	wp_add_inline_script('wp-browser-update-browserupdate', 'var $buoop = ' . wp_json_encode(wpbu_get_buoop_config(), JSON_UNESCAPED_SLASHES) . ';', 'before');
+	wp_enqueue_style('wp-browser-update-browserupdate', plugins_url(WPBU_BROWSER_UPDATE_STYLE_FILE, __FILE__), array(), WPBU_BROWSER_UPDATE_API_VERSION);
+	if (wpbu_get_custom_css() !== '') {
+		wp_enqueue_style('wp-browser-update-custom', add_query_arg('action', 'wpbu_custom_css', admin_url('admin-ajax.php')), array('wp-browser-update-browserupdate'), WPBU_BROWSER_UPDATE_API_VERSION);
+	}
+	wp_enqueue_script('wp-browser-update-config', add_query_arg('action', 'wpbu_config_js', admin_url('admin-ajax.php')), array(), WPBU_BROWSER_UPDATE_API_VERSION, true);
+	wp_enqueue_script('wp-browser-update-browserupdate', plugins_url(WPBU_BROWSER_UPDATE_SCRIPT_FILE, __FILE__), array('wp-browser-update-config'), WPBU_BROWSER_UPDATE_API_VERSION, true);
 }
 
-function wpbu_handle_settings_update() {
-	if (!isset($_POST['wpbu_submit'])) {
-		return false;
-	}
+function wpbu_render_config_js() {
+	header('Content-Type: application/javascript; charset=' . get_option('blog_charset'));
+	echo 'window.$buoop = ' . wp_json_encode(wpbu_get_buoop_config(), JSON_UNESCAPED_SLASHES) . ';';
+	exit;
+}
 
-	check_admin_referer('wpbu_settings', 'wpbu_nonce');
+function wpbu_get_custom_css() {
+	return wpbu_sanitize_custom_css(get_option('wp_browserupdate_css_buorg', ''));
+}
 
-	$browser_fields = array('wpbu_msie', 'wpbu_firefox', 'wpbu_opera', 'wpbu_safari', 'wpbu_google');
+function wpbu_render_custom_css() {
+	header('Content-Type: text/css; charset=' . get_option('blog_charset'));
+	echo wpbu_get_custom_css();
+	exit;
+}
+
+function wpbu_sanitize_browser_versions_option($value) {
+	$order = wpbu_browser_field_order();
 	$browsers = array();
 
-	foreach ($browser_fields as $field) {
-		$browsers[] = wpbu_sanitize_version_setting($_POST[$field] ?? '0');
+	if (is_array($value)) {
+		foreach ($order as $field) {
+			$browsers[] = wpbu_sanitize_version_setting($value[$field] ?? '0');
+		}
+	} else {
+		$values = explode(' ', wpbu_unslash_scalar($value, implode(' ', wpbu_default_browser_versions())));
+		$values = array_pad($values, count($order), '0');
+
+		foreach (array_keys($order) as $index) {
+			$browsers[] = wpbu_sanitize_version_setting($values[$index] ?? '0');
+		}
 	}
 
-	$js_settings = array(
-		wpbu_sanitize_reminder_setting($_POST['wpbu_reminder'] ?? 12),
-		wpbu_sanitize_bool_string($_POST['wpbu_testing'] ?? 'false', 'false'),
-		wpbu_sanitize_bool_string($_POST['wpbu_newwindow'] ?? 'true', 'true'),
-		wpbu_sanitize_style_setting($_POST['wpbu_style'] ?? 'top'),
-		wpbu_sanitize_bool_string($_POST['wpbu_secis'] ?? 'true', 'true'),
-		wpbu_sanitize_bool_string($_POST['wpbu_unsup'] ?? 'true', 'true'),
-		wpbu_sanitize_bool_string($_POST['wpbu_mobile'] ?? 'true', 'true'),
-		wpbu_sanitize_bool_string($_POST['wpbu_shift'] ?? 'true', 'true'),
-	);
+	return implode(' ', $browsers);
+}
 
-	update_option('wp_browserupdate_browsers', implode(' ', $browsers));
-	update_option('wp_browserupdate_js', implode(' ', $js_settings));
-	update_option('wp_browserupdate_css_buorg', wpbu_sanitize_custom_css($_POST['wpbu_css_buorg'] ?? ''));
+function wpbu_sanitize_js_settings_option($value) {
+	$defaults = wpbu_default_js_settings();
+	$keys = wpbu_js_setting_keys();
+	$settings = array();
 
-	return true;
+	if (is_array($value)) {
+		$raw = $value;
+	} else {
+		$values = array_pad(explode(' ', wpbu_unslash_scalar($value, implode(' ', $defaults))), count($keys), null);
+		$raw = array_combine($keys, array_slice($values, 0, count($keys)));
+	}
+
+	$settings[] = wpbu_sanitize_reminder_setting($raw['wpbu_reminder'] ?? $defaults[0]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_testing'] ?? $defaults[1], $defaults[1]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_newwindow'] ?? $defaults[2], $defaults[2]);
+	$settings[] = wpbu_sanitize_style_setting($raw['wpbu_style'] ?? $defaults[3]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_secis'] ?? $defaults[4], $defaults[4]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_unsup'] ?? $defaults[5], $defaults[5]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_mobile'] ?? $defaults[6], $defaults[6]);
+	$settings[] = wpbu_sanitize_bool_string($raw['wpbu_shift'] ?? $defaults[7], $defaults[7]);
+
+	return implode(' ', $settings);
+}
+
+function wpbu_register_settings() {
+	register_setting('wp_browserupdate', 'wp_browserupdate_browsers', 'wpbu_sanitize_browser_versions_option');
+	register_setting('wp_browserupdate', 'wp_browserupdate_js', 'wpbu_sanitize_js_settings_option');
+	register_setting('wp_browserupdate', 'wp_browserupdate_css_buorg', 'wpbu_sanitize_custom_css');
+
+	add_settings_section('wpbu_browser_versions', __('Outdated Browser Versions', 'wp-browser-update'), 'wpbu_render_browser_versions_section', 'wp-browserupdate');
+
+	foreach (wpbu_get_browser_configs(wpbu_default_browser_versions()) as $key => $browser) {
+		add_settings_field('wpbu_browser_' . $key, $browser['name'], 'wpbu_render_browser_version_field', 'wp-browserupdate', 'wpbu_browser_versions', array('key' => $key, 'label_for' => 'wpbu_' . $key));
+	}
+
+	add_settings_section('wpbu_notification_behaviour', __('Notification Behaviour', 'wp-browser-update'), 'wpbu_render_notification_behaviour_section', 'wp-browserupdate');
+	add_settings_field('wpbu_reminder', __('Reappearance Interval', 'wp-browser-update'), 'wpbu_render_reminder_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('label_for' => 'wpbu_reminder'));
+	add_settings_field('wpbu_newwindow', __('Open Links in New Tab', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_newwindow', 'label_for' => 'wpbu_newwindow'));
+	add_settings_field('wpbu_testing', __('Testing Mode', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_testing', 'label_for' => 'wpbu_testing'));
+	add_settings_field('wpbu_style', __('Notification Position', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_style', 'label_for' => 'wpbu_style'));
+	add_settings_field('wpbu_secis', __('Notify Security Risks', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_secis', 'label_for' => 'wpbu_secis'));
+	add_settings_field('wpbu_unsup', __('Notify Unsupported Browsers', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_unsup', 'label_for' => 'wpbu_unsup'));
+	add_settings_field('wpbu_mobile', __('Notify Mobile Browsers', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_mobile', 'label_for' => 'wpbu_mobile'));
+	add_settings_field('wpbu_shift', __('Prevent Content Overlap', 'wp-browser-update'), 'wpbu_render_select_field', 'wp-browserupdate', 'wpbu_notification_behaviour', array('name' => 'wpbu_shift', 'label_for' => 'wpbu_shift'));
+
+	add_settings_section('wpbu_custom_css', __('Custom CSS', 'wp-browser-update'), 'wpbu_render_custom_css_section', 'wp-browserupdate');
+	add_settings_field('wp_browserupdate_css_buorg', __('Custom CSS', 'wp-browser-update'), 'wpbu_render_custom_css_field', 'wp-browserupdate', 'wpbu_custom_css', array('label_for' => 'wpbu_css_buorg'));
 }
 
 function wpbu_migrate_negative_browser_versions($browser_values, $browsers) {
 	$needs_migration = false;
 
-	foreach (array_keys($browsers) as $index => $key) {
+	foreach (wpbu_browser_field_order() as $index => $key) {
+		if (!isset($browsers[$key])) {
+			continue;
+		}
+
 		$value = $browser_values[$index] ?? '0';
 
 		if (!is_numeric($value) || (float) $value >= 0) {
@@ -320,6 +397,10 @@ function wpbu_migrate_negative_browser_versions($browser_values, $browsers) {
 		}
 
 		$browser = $browsers[$key];
+		if (empty($browser['url']) || empty($browser['xpath'])) {
+			continue;
+		}
+
 		$regex = isset($browser['regex']) ? $browser['regex'] : '/\d+(\.\d+)+/';
 		$version = wpbu_getversion_cached($browser['url'], $browser['xpath'], $regex);
 
@@ -340,42 +421,112 @@ function wpbu_migrate_negative_browser_versions($browser_values, $browsers) {
 	return $needs_migration ? wpbu_get_browser_versions_option() : $browser_values;
 }
 
-function wpbu_render_browser_rows($browsers) {
-	$output = '<table class="form-table">';
+function wpbu_get_admin_browser_configs() {
+	static $browsers = null;
 
-	foreach ($browsers as $key => $browser) {
-		$version = '';
-
-		if (!empty($browser['url']) && !empty($browser['xpath'])) {
-			$regex = isset($browser['regex']) ? $browser['regex'] : '/\d+\.\d+\.\d+\.\d+/';
-			$version = wpbu_getversion_cached($browser['url'], $browser['xpath'], $regex);
-		}
-
-		$selected_raw = trim((string) ($browser['selected'] ?? '0'));
-		$normalized = wpbu_normalize_version_for_buorg($selected_raw);
-
-		$output .= '<tr><th scope="row"><label for="wpbu_' . esc_attr($key) . '"><a href="' . esc_url($browser['download']) . '" target="_blank" rel="noopener noreferrer">' . esc_html($browser['name']) . '</a></label></th><td><input type="text" pattern="^-?[0-9]+(\.[0-9]+)*$" name="wpbu_' . esc_attr($key) . '" id="wpbu_' . esc_attr($key) . '" value="' . esc_attr($browser['selected']) . '" title="' . esc_attr__('Only numbers, dots and an optional leading minus are allowed', 'wp-browser-update') . '" size="12" />';
-
-		if ($selected_raw === '0') {
-			$output .= ' <small>' . esc_html__('Detection: show all outdated versions (default)', 'wp-browser-update') . '</small>';
-		} elseif ($normalized < 0) {
-			$output .= ' <small>' . sprintf(esc_html__('Detection: latest − %d major versions', 'wp-browser-update'), abs($normalized)) . '</small>';
-		} else {
-			$output .= ' <small>' . sprintf(esc_html__('Detection uses major version: %s', 'wp-browser-update'), esc_html($normalized)) . '</small>';
-		}
-
-		if ($version) {
-			$output .= ' <small> — ' . esc_html__('Latest version', 'wp-browser-update') . ': ' . esc_html($version) . '</small>';
-		}
-
-		$output .= '</td></tr>';
+	if ($browsers !== null) {
+		return $browsers;
 	}
 
-	return $output . '</table>';
+	$browser_values = wpbu_get_browser_versions_option();
+	$browsers = wpbu_get_browser_configs($browser_values);
+	$browser_values = wpbu_migrate_negative_browser_versions($browser_values, $browsers);
+	$browsers = wpbu_get_browser_configs($browser_values);
+
+	return $browsers;
 }
 
-function wpbu_render_select_field($name, $field) {
-	echo '<p><label for="' . esc_attr($name) . '"><strong>' . esc_html($field['label']) . ':</strong></label><br><select id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">';
+function wpbu_get_js_settings_map() {
+	$keys = wpbu_js_setting_keys();
+	$wpbu_js = array_slice(wpbu_get_js_settings_option(), 0, count($keys));
+
+	return array_combine($keys, $wpbu_js);
+}
+
+function wpbu_get_select_field_configs() {
+	$wpbu_values = wpbu_get_js_settings_map();
+
+	return array(
+		'wpbu_newwindow' => array('description' => __('Open the notification bar link in a new browser tab or window.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_newwindow']),
+		'wpbu_testing'   => array('description' => __('Always display the notification bar (useful for testing).', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_testing']),
+		'wpbu_style'     => array('description' => __('Select where the notification bar should appear on the page.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_style'], 'options' => array('top' => __('Top', 'wp-browser-update'), 'bottom' => __('Bottom', 'wp-browser-update'), 'corner' => __('Corner', 'wp-browser-update'))),
+		'wpbu_secis'     => array('description' => __('Alert users of all browser versions with serious security vulnerabilities.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_secis']),
+		'wpbu_unsup'     => array('description' => __('Include browsers that are no longer supported by their vendor.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_unsup']),
+		'wpbu_mobile'    => array('description' => __('Enable notifications for mobile browsers.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_mobile']),
+		'wpbu_shift'     => array('description' => __('Adjust the page layout to avoid content being obscured by the notification bar (adds margin-top to the body tag).', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_shift']),
+	);
+}
+
+function wpbu_render_browser_versions_section() {
+	echo '<p>' . esc_html__('Select the browser versions you consider outdated, including all earlier versions.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Use 0 for the Browser-Update.org default detection, a major version such as 137, an exact dotted version such as 137.0.3912.63, or a negative whole number such as -2 for latest minus 2 major versions.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Microsoft Edge and Microsoft Internet Explorer are configured separately and passed to Browser-Update.org as separate browser keys.', 'wp-browser-update') . '</p>';
+}
+
+function wpbu_render_browser_version_field($args) {
+	$key = $args['key'] ?? '';
+	$browsers = wpbu_get_admin_browser_configs();
+
+	if (!isset($browsers[$key])) {
+		return;
+	}
+
+	$browser = $browsers[$key];
+	$version = '';
+
+	if (!empty($browser['url']) && !empty($browser['xpath'])) {
+		$regex = isset($browser['regex']) ? $browser['regex'] : '/\d+\.\d+\.\d+\.\d+/';
+		$version = wpbu_getversion_cached($browser['url'], $browser['xpath'], $regex);
+	}
+
+	$selected_raw = trim((string) ($browser['selected'] ?? '0'));
+	$required_version = wpbu_format_required_version_for_buorg($selected_raw);
+	$field_id = 'wpbu_' . $key;
+	$description_id = $field_id . '_description';
+
+	echo '<input type="text" class="regular-text code" pattern="(?:-?[0-9]+|[0-9]+(?:\.[0-9]+)+)" name="wp_browserupdate_browsers[' . esc_attr($key) . ']" id="' . esc_attr($field_id) . '" value="' . esc_attr($browser['selected']) . '" aria-describedby="' . esc_attr($description_id) . '" title="' . esc_attr__('Use a whole number, a positive dotted version, or a negative whole number.', 'wp-browser-update') . '" />';
+	echo '<p class="description" id="' . esc_attr($description_id) . '">';
+
+	if ($required_version === 0) {
+		echo esc_html__('Detection: show all outdated versions (default)', 'wp-browser-update');
+	} elseif (is_int($required_version) && $required_version < 0) {
+		echo sprintf(esc_html__('Detection: latest − %d major versions', 'wp-browser-update'), abs($required_version));
+	} elseif (is_string($required_version)) {
+		echo sprintf(esc_html__('Detection uses exact version: %s', 'wp-browser-update'), esc_html($required_version));
+	} else {
+		echo sprintf(esc_html__('Detection uses major version: %s', 'wp-browser-update'), esc_html($required_version));
+	}
+
+	if ($version) {
+		echo ' — ' . esc_html__('Latest version', 'wp-browser-update') . ': ' . esc_html($version);
+	}
+
+	echo ' — <a href="' . esc_url($browser['download']) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Browser download page', 'wp-browser-update') . '</a>';
+	echo '</p>';
+}
+
+function wpbu_render_notification_behaviour_section() {
+	echo '<p>' . esc_html__('Configure how the Browser-Update.org notification behaves on public pages.', 'wp-browser-update') . '</p>';
+}
+
+function wpbu_render_reminder_field() {
+	$wpbu_values = wpbu_get_js_settings_map();
+
+	echo '<input type="number" class="small-text" value="' . esc_attr($wpbu_values['wpbu_reminder']) . '" id="wpbu_reminder" name="wp_browserupdate_js[wpbu_reminder]" min="0" max="99" step="1" required aria-describedby="wpbu_reminder_description" />';
+	echo '<p class="description" id="wpbu_reminder_description">' . esc_html__('How many hours before the message should reappear (0 = always show).', 'wp-browser-update') . '</p>';
+}
+
+function wpbu_render_select_field($args) {
+	$name = $args['name'] ?? '';
+	$fields = wpbu_get_select_field_configs();
+
+	if (!isset($fields[$name])) {
+		return;
+	}
+
+	$field = $fields[$name];
+
+	echo '<select id="' . esc_attr($name) . '" name="wp_browserupdate_js[' . esc_attr($name) . ']" aria-describedby="' . esc_attr($name . '_description') . '">';
 
 	if (!empty($field['options'])) {
 		foreach ($field['options'] as $key => $label) {
@@ -386,41 +537,29 @@ function wpbu_render_select_field($name, $field) {
 		echo '<option value="false"' . selected($field['value'], 'false', false) . '>' . esc_html__('No', 'wp-browser-update') . '</option>';
 	}
 
-	echo '</select><br>' . esc_html($field['description']) . '</p>';
+	echo '</select>';
+	echo '<p class="description" id="' . esc_attr($name . '_description') . '">' . esc_html($field['description']) . '</p>';
+}
+
+function wpbu_render_custom_css_section() {
+	echo '<p>' . esc_html__('Optional trusted CSS overrides for the Browser-Update.org notification.', 'wp-browser-update') . '</p>';
+}
+
+function wpbu_render_custom_css_field() {
+	$wpbu_css_buorg = get_option('wp_browserupdate_css_buorg', '');
+
+	echo '<textarea id="wpbu_css_buorg" name="wp_browserupdate_css_buorg" rows="15" cols="45" class="large-text code" aria-describedby="wpbu_css_buorg_description">' . esc_textarea($wpbu_css_buorg) . '</textarea>';
+	echo '<p class="description" id="wpbu_css_buorg_description">' . sprintf(esc_html__('Override the default CSS with your own rules (%sread more%s). Leave blank to use the default.', 'wp-browser-update'), '<a href="https://browserupdate.org/customize.html" target="_blank" rel="noopener noreferrer">', '</a>') . '</p>';
 }
 
 function wpbu_render_settings_page() {
-	$browser_values = wpbu_get_browser_versions_option();
-	$browsers = wpbu_get_browser_configs($browser_values);
-	$browser_values = wpbu_migrate_negative_browser_versions($browser_values, $browsers);
-	$browsers = wpbu_get_browser_configs($browser_values);
-	$wpbu_js = wpbu_get_js_settings_option();
-	$wpbu_keys = array('wpbu_reminder', 'wpbu_testing', 'wpbu_newwindow', 'wpbu_style', 'wpbu_secis', 'wpbu_unsup', 'wpbu_mobile', 'wpbu_shift');
-	$wpbu_values = array_combine($wpbu_keys, $wpbu_js);
-
-	$select_fields = array(
-		'wpbu_newwindow' => array('label' => __('Open Links in New Tab', 'wp-browser-update'), 'description' => __('Open the notification bar link in a new browser tab or window.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_newwindow']),
-		'wpbu_testing'   => array('label' => __('Testing Mode', 'wp-browser-update'), 'description' => __('Always display the notification bar (useful for testing).', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_testing']),
-		'wpbu_style'     => array('label' => __('Notification Position', 'wp-browser-update'), 'description' => __('Select where the notification bar should appear on the page.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_style'], 'options' => array('top' => __('Top', 'wp-browser-update'), 'bottom' => __('Bottom', 'wp-browser-update'), 'corner' => __('Corner', 'wp-browser-update'))),
-		'wpbu_secis'     => array('label' => __('Notify Security Risks', 'wp-browser-update'), 'description' => __('Alert users of all browser versions with serious security vulnerabilities.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_secis']),
-		'wpbu_unsup'     => array('label' => __('Notify Unsupported Browsers', 'wp-browser-update'), 'description' => __('Include browsers that are no longer supported by their vendor.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_unsup']),
-		'wpbu_mobile'    => array('label' => __('Notify Mobile Browsers', 'wp-browser-update'), 'description' => __('Enable notifications for mobile browsers.', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_mobile']),
-		'wpbu_shift'     => array('label' => __('Prevent Content Overlap', 'wp-browser-update'), 'description' => __('Adjust the page layout to avoid content being obscured by the notification bar (adds margin-top to the body tag).', 'wp-browser-update'), 'value' => $wpbu_values['wpbu_shift']),
-	);
-
-	$wpbu_css_buorg = get_option('wp_browserupdate_css_buorg', '');
-
-	echo '<div class="wrap"><form action="' . esc_url(menu_page_url('wp-browserupdate', false)) . '" method="post">';
-	wp_nonce_field('wpbu_settings', 'wpbu_nonce');
-	echo '<h1>WP BrowserUpdate</h1><h2>' . esc_html__('Outdated Browser Versions', 'wp-browser-update') . '</h2><p>' . esc_html__('Select the browser versions you consider outdated (including all earlier versions). If left unchanged, WP BrowserUpdate will use the default settings.', 'wp-browser-update') . '</p><p>' . esc_html__('If you set the browser version to 0, a notification will be shown for every outdated browser version.', 'wp-browser-update') . '</p>';
-	echo wpbu_render_browser_rows($browsers);
-	echo '<h2>' . esc_html__('Script Customizations', 'wp-browser-update') . '</h2><p><label for="wpbu_reminder"><strong>' . esc_html__('Reappearance Interval', 'wp-browser-update') . ':</strong></label><br><input type="number" value="' . esc_attr($wpbu_values['wpbu_reminder']) . '" id="wpbu_reminder" name="wpbu_reminder" min="0" max="99" step="1" required placeholder="' . esc_attr__('How many hours before the message should reappear (0 = Always show)?', 'wp-browser-update') . '"><br>' . esc_html__('How many hours before the message should reappear (0 = Always show)?', 'wp-browser-update') . '</p>';
-
-	foreach ($select_fields as $name => $field) {
-		wpbu_render_select_field($name, $field);
-	}
-
-	echo '<p><label for="wpbu_css_buorg"><strong>' . esc_html__('Custom CSS', 'wp-browser-update') . ':</strong></label><br><textarea id="wpbu_css_buorg" name="wpbu_css_buorg" rows="15" cols="45">' . esc_textarea($wpbu_css_buorg) . '</textarea><br>' . sprintf(esc_html__('Override the default CSS with your own rules (%sread more%s) – leave blank to use the default.', 'wp-browser-update'), '<a href="https://browserupdate.org/customize.html" target="_blank" rel="noopener noreferrer">', '</a>') . '</p><p class="submit"><input type="submit" name="wpbu_submit" id="submit" class="button button-primary" value="' . esc_attr__('Update Settings', 'wp-browser-update') . '" /></p></form></div>';
+	echo '<div class="wrap">';
+	echo '<h1>' . esc_html(get_admin_page_title()) . '</h1>';
+	echo '<form action="options.php" method="post">';
+	settings_fields('wp_browserupdate');
+	do_settings_sections('wp-browserupdate');
+	submit_button(__('Save Settings', 'wp-browser-update'));
+	echo '</form></div>';
 }
 
 function wpbu_administration() {
@@ -428,20 +567,7 @@ function wpbu_administration() {
 		wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'wp-browser-update'));
 	}
 
-	if (wpbu_handle_settings_update()) {
-		echo '<div class="updated"><p><strong>' . esc_html__('Settings saved.', 'wp-browser-update') . '</strong></p></div>';
-	}
-
 	wpbu_render_settings_page();
-}
-
-function wpbu_css() {
-	$wpbu_css_buorg = wpbu_sanitize_custom_css(get_option('wp_browserupdate_css_buorg', ''));
-
-	if (!empty($wpbu_css_buorg)) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is sanitised by wpbu_sanitize_custom_css().
-		echo '<style id="wpbu-custom-css">' . $wpbu_css_buorg . "\n\n</style>";
-	}
 }
 
 function wpbu_admin() {
@@ -463,5 +589,9 @@ function wpbu_plugin_links($links, $file) {
 add_filter('plugin_action_links_' . basename(dirname(__FILE__)) . '/' . basename(__FILE__), 'wpbu_settings_link');
 add_filter('plugin_row_meta', 'wpbu_plugin_links', 10, 2);
 add_action('wp_enqueue_scripts', 'wpbu_enqueue_browserupdate');
-add_action('wp_head', 'wpbu_css');
+add_action('wp_ajax_wpbu_config_js', 'wpbu_render_config_js');
+add_action('wp_ajax_nopriv_wpbu_config_js', 'wpbu_render_config_js');
+add_action('wp_ajax_wpbu_custom_css', 'wpbu_render_custom_css');
+add_action('wp_ajax_nopriv_wpbu_custom_css', 'wpbu_render_custom_css');
+add_action('admin_init', 'wpbu_register_settings');
 add_action('admin_menu', 'wpbu_admin');
