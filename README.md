@@ -1,7 +1,7 @@
 # WP BrowserUpdate
 ![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?label=Release&color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
-![Static Badge](https://img.shields.io/badge/WordPress_>=-v4.6-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_>=-v6.0-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v6.9.1-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v6.9.1-blue)
 [![Licence: GPL3](https://img.shields.io/badge/Licence-GPL3-green)](https://gnu.org/licenses/gpl)
@@ -28,6 +28,7 @@ Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugi
 
 ## Important Notice
 > **Breaking Changes in Version 6.0.0**
+- Version 6.0.0 requires **WordPress 6.0** or newer.
 - Version 6.0.0 introduces a new structured settings model to support the browser-update.org customisation surface used by WP BrowserUpdate.
 - Version 6.0.0 also moves the visitor-facing browser-update.org runtime into the plugin package so strict Content Security Policies and tracker blockers no longer need to allow scripts from `browser-update.org`.
 - Existing WP BrowserUpdate settings from version 5.x are migrated automatically.
@@ -75,6 +76,7 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 ## Changelog
 ### 6.0.0
 - Breaking:
+    - Requires WordPress 6.0 or newer.
     - Replaces the legacy space-separated settings storage with the structured `wp_browserupdate_options` option.
     - Migrates existing `wp_browserupdate_browsers`, `wp_browserupdate_js`, and `wp_browserupdate_css_buorg` values automatically.
     - Removes the old normal-render-path conversion of negative browser versions; values are now passed predictably to the bundled runtime.

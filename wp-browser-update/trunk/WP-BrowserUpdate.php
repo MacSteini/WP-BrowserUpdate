@@ -6,7 +6,7 @@ Description: This plugin notifies website visitors to update their outdated brow
 Version: 6.0.0
 Author: Marco Steinbrecher
 Author URI: https://profiles.wordpress.org/macsteini
-Requires at least: 4.6
+Requires at least: 6.0
 License: GPLv3 or later
 License URI: http://gnu.org/licenses/gpl
 */
@@ -30,7 +30,7 @@ return;
 }
 
 function wpbu_browser_configs() {
-return array('c' => array('name' => 'Google Chrome', 'download' => 'https://chrome.google.com/', 'url' => 'https://en.wikipedia.org/wiki/Google_Chrome', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td"), 'f' => array('name' => 'Mozilla Firefox', 'download' => 'https://firefox.com/', 'url' => 'https://en.wikipedia.org/wiki/Firefox', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[text()='Standard']]/td", 'regex' => '/\d+(\.\d+)+/'), 's' => array('name' => 'Apple Safari', 'download' => 'https://support.apple.com/102665', 'url' => 'https://support.apple.com/en-us/100100', 'xpath' => "(//a[starts-with(normalize-space(.), 'Safari ')])[1]", 'regex' => '/\d+(?:\.\d+)+/'), 'e' => array('name' => 'Microsoft Edge', 'download' => 'https://microsoft.com/edge', 'url' => 'https://en.wikipedia.org/wiki/Microsoft_Edge', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td"), 'i' => array('name' => 'Microsoft Internet Explorer', 'download' => 'https://blogs.windows.com/windowsexperience/2022/06/15/internet-explorer-11-has-retired-and-is-officially-out-of-support-what-you-need-to-know/'), 'ios' => array('name' => 'iOS Safari', 'download' => 'https://support.apple.com/ios'), 'samsung' => array('name' => 'Samsung Internet', 'download' => 'https://www.samsung.com/apps/samsung-internet/'), 'o' => array('name' => 'Opera', 'download' => 'https://opera.com/', 'url' => 'https://en.wikipedia.org/wiki/Opera_(web_browser)', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release']]/td"), 'o_a' => array('name' => 'Opera for Android', 'download' => 'https://opera.com/browsers/opera-for-android'), 'e_a' => array('name' => 'Microsoft Edge for Android', 'download' => 'https://microsoft.com/edge'), 'y' => array('name' => 'Yandex Browser', 'download' => 'https://browser.yandex.com/'), 'v' => array('name' => 'Vivaldi', 'download' => 'https://vivaldi.com/'), 'uc' => array('name' => 'UC Browser', 'download' => 'https://www.ucweb.com/'), 'a' => array('name' => 'Android Browser', 'download' => 'https://www.android.com/'));
+return array('c' => array('name' => 'Google Chrome', 'download' => 'https://chrome.google.com/', 'url' => 'https://en.wikipedia.org/wiki/Google_Chrome', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td"), 'f' => array('name' => 'Mozilla Firefox', 'download' => 'https://firefox.com/', 'url' => 'https://en.wikipedia.org/wiki/Firefox', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[text()='Standard']]/td", 'regex' => '/\d+(\.\d+)+/'), 's' => array('name' => 'Apple Safari', 'download' => 'https://support.apple.com/102665', 'url' => 'https://support.apple.com/100100', 'xpath' => "(//a[starts-with(normalize-space(.), 'Safari ')])[1]", 'regex' => '/\d+(?:\.\d+)+/'), 'e' => array('name' => 'Microsoft Edge', 'download' => 'https://microsoft.com/edge', 'url' => 'https://en.wikipedia.org/wiki/Microsoft_Edge', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release(s)']]/following-sibling::tr[1]//table[contains(@class, 'infobox-subbox')]//tr[th[contains(text(),'Windows')]]/td"), 'i' => array('name' => 'Microsoft Internet Explorer', 'download' => 'https://support.microsoft.com/internet-explorer/internet-explorer-help'), 'ios' => array('name' => 'iOS Safari'), 'samsung' => array('name' => 'Samsung Internet Browser', 'download' => 'https://play.google.com/store/apps/details?id=com.sec.android.app.sbrowser'), 'o' => array('name' => 'Opera', 'download' => 'https://opera.com/', 'url' => 'https://en.wikipedia.org/wiki/Opera_(web_browser)', 'xpath' => "//table[contains(@class,'infobox')]//tr[th//a[text()='Stable release']]/td"), 'o_a' => array('name' => 'Opera for Android', 'download' => 'https://opera.com/opera/android'), 'e_a' => array('name' => 'Microsoft Edge for Android', 'download' => 'https://play.google.com/store/apps/details?id=com.microsoft.emmx'), 'y' => array('name' => 'Yandex Browser', 'download' => 'https://browser.yandex.com/'), 'v' => array('name' => 'Vivaldi', 'download' => 'https://vivaldi.com/'), 'uc' => array('name' => 'UC Browser', 'download' => 'https://ucweb.com/'), 'a' => array('name' => 'Android Browser'));
 }
 
 function wpbu_browser_keys() {
@@ -81,9 +81,7 @@ return (string) wp_unslash($value);
 function wpbu_fetchurl($url) {
 $host = wp_parse_url($url, PHP_URL_HOST);
 
-if (!is_string($host) || !in_array($host, wpbu_allowed_remote_hosts(), true)) {
-return '';
-}
+if (!is_string($host) || !in_array($host, wpbu_allowed_remote_hosts(), true)) return '';
 
 $response = wp_safe_remote_get($url, array('timeout' => 10, 'redirection' => 3, 'user-agent' => 'WP BrowserUpdate/'.WPBU_BROWSER_UPDATE_API_VERSION.'; '.home_url('/')));
 
@@ -129,10 +127,8 @@ $version = get_transient($key);
 
 if ($version!==false) return $version;
 
-
 $version = wpbu_getversion($url, $xpath, $regex);
 if (is_string($version) && strlen($version)<255) set_transient($key, $version, $hours * HOUR_IN_SECONDS);
-
 
 return $version;
 }
@@ -143,8 +139,6 @@ $value = trim((string) $value);
 if ($value==='') return 0;
 
 if (preg_match('/^-?\d+$/', $value)) return (int) $value;
-
-
 if (preg_match('/^\d+(?:\.\d+)+$/', $value)) return $value;
 
 
@@ -332,7 +326,6 @@ if (!empty($options['links'][$key])) $config[$key] = $options['links'][$key];
 }
 
 if (!empty($options['language']['l'])) $config['l'] = $options['language']['l'];
-
 if (!empty($options['behaviour']['container'])) $config['_wpbu_container'] = $options['behaviour']['container'];
 
 $config = array_merge($config, wpbu_build_text_config($options['text']));
@@ -357,8 +350,7 @@ echo 'window.$buoop = '.wp_json_encode($config, JSON_UNESCAPED_SLASHES | JSON_UN
 
 if ($container!=='') {
 echo "\n(function(config, selector) {";
-echo 'try{var el=document.querySelector(selector);if(el){config.container=el;}}catch(e){}';
-echo '})(window.$buoop, '.wp_json_encode($container, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).');';
+echo 'try{var el=document.querySelector(selector);if(el){config.container=el;}}catch(e){}})(window.$buoop, '.wp_json_encode($container, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).');';
 }
 
 exit;
@@ -482,17 +474,11 @@ $name = $base.'['.$key.']';
 
 if ($field['type']==='select') {
 echo '<select id="'.esc_attr($field_id).'" name="'.esc_attr($name).'">';
-foreach ($field['options'] as $value => $label) {
-echo '<option value="'.esc_attr($value).'"'.selected($behaviour['style'], $value, false).'>'.esc_html($label).'</option>';
-}
+foreach ($field['options'] as $value => $label) echo '<option value="'.esc_attr($value).'"'.selected($behaviour['style'], $value, false).'>'.esc_html($label).'</option>';
 echo '</select>';
-} elseif ($field['type']==='number') {
-echo '<input type="number" class="small-text" min="0" max="9999" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" />';
-} elseif ($field['type']==='text') {
-echo '<input type="text" class="regular-text code" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" placeholder="body" />';
-} else {
-wpbu_render_yes_no_select($field_id, $name, $behaviour[$key]);
-}
+} elseif ($field['type']==='number') echo '<input type="number" class="small-text" min="0" max="9999" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" />';
+elseif ($field['type']==='text') echo '<input type="text" class="regular-text code" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" placeholder="body" />';
+else wpbu_render_yes_no_select($field_id, $name, $behaviour[$key]);
 if (!empty($field['description'])) echo '<p class="description">'.esc_html($field['description']).'</p>';
 }
 
@@ -512,8 +498,7 @@ if (!isset($fields[$key])) return;
 $options = wpbu_admin_options();
 $base = WPBU_OPTIONS_NAME.'[links]';
 $description_id = 'wpbu_link_'.$key.'_description';
-echo '<input type="url" class="large-text code" id="wpbu_link_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['links'][$key]).'" aria-describedby="'.esc_attr($description_id).'" />';
-echo '<p class="description" id="'.esc_attr($description_id).'">'.esc_html($fields[$key]['description']).'</p>';
+echo '<input type="url" class="large-text code" id="wpbu_link_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['links'][$key]).'" aria-describedby="'.esc_attr($description_id).'" /><p class="description" id="'.esc_attr($description_id).'">'.esc_html($fields[$key]['description']).'</p>';
 }
 
 function wpbu_render_language_text_section() {
@@ -533,8 +518,7 @@ $options = wpbu_admin_options();
 $base = WPBU_OPTIONS_NAME.'[text][default]';
 $defaults = wpbu_default_text_values();
 $description_id = 'wpbu_text_'.$key.'_description';
-echo '<input type="text" class="large-text" id="wpbu_text_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['text']['default'][$key]).'" aria-describedby="'.esc_attr($description_id).'" />';
-echo '<p class="description" id="'.esc_attr($description_id).'">'.sprintf(esc_html__('Default: %s', 'wp-browser-update'), esc_html($defaults[$key] ?? '')).'</p>';
+echo '<input type="text" class="large-text" id="wpbu_text_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['text']['default'][$key]).'" aria-describedby="'.esc_attr($description_id).'" /><p class="description" id="'.esc_attr($description_id).'">'.sprintf(esc_html__('Default: %s', 'wp-browser-update'), esc_html($defaults[$key] ?? '')).'</p>';
 }
 
 function wpbu_render_text_overrides_field() {

@@ -3,7 +3,7 @@ Contributors: MacSteini
 Tags: Browser, Update, Notice, Outdated, Warning
 Tested up to: 6.9
 Compatible up to: 6.9
-Requires at least: 4.6
+Requires at least: 6.0
 Requires PHP: 7.4
 Stable tag: 6.0.0
 License: GPLv3 or later
@@ -27,14 +27,15 @@ The settings page is available under **Settings > WP BrowserUpdate**. You can de
 
 Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to the bundled runtime instead of being reduced to their major version; exact comparison depends on the bundled browser-update.org logic and the browser key used by that runtime. A value of `0` uses the default bundled outdated-browser detection. Negative whole numbers are passed to the bundled runtime as relative offsets from the current bundled upstream version.
 
-Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to the bundled runtime so the two browsers can use different thresholds.
+Microsoft Edge and Microsoft Internet Explorer have separate settings now.
 
 This local runtime design avoids frontend blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. WP BrowserUpdate ships only the local runtime and CSP adapter files needed by the plugin.
 
 == Important Notice ==
 **Breaking Changes in Version 6.0**
-- Version 6.0.0 introduces a new structured settings model to support the browser-update.org customisation surface used by WP BrowserUpdate.
-- Version 6.0.0 also moves the visitor-facing browser-update.org runtime into the plugin package so strict Content Security Policies and tracker blockers no longer need to allow scripts from `browser-update.org`.
+- Requires **WordPress 6.0** or newer.
+- Introduces a new structured settings model to support the browser-update.org customisation surface used by WP BrowserUpdate.
+- Moves the visitor-facing browser-update.org runtime into the plugin package so strict Content Security Policies and tracker blockers no longer need to allow scripts from `browser-update.org`.
 - Existing WP BrowserUpdate settings from version 5.x are migrated automatically.
 
 **Breaking Changes in Version 5.0**
@@ -81,6 +82,7 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 == Changelog ==
 = 6.0.0 =
 * Breaking:
+    * Requires WordPress 6.0 or newer.
     * Replaces the legacy space-separated settings storage with the structured `wp_browserupdate_options` option.
     * Migrates existing `wp_browserupdate_browsers`, `wp_browserupdate_js`, and `wp_browserupdate_css_buorg` values automatically.
     * Removes the old normal-render-path conversion of negative browser versions; values are now passed predictably to the bundled runtime.
