@@ -1,0 +1,4 @@
+* export-ignore
+wp-browser-update -export-ignore
+wp-browser-update/trunk -export-ignore
+wp-browser-update/trunk/** -export-ignore
