@@ -1,6 +1,9 @@
 name: Deploy to WordPress.org
 
 on:
+  release:
+    types:
+      - published
   workflow_dispatch:
     inputs:
       dry_run:
@@ -24,26 +27,55 @@ jobs:
   deploy:
     name: Deploy Plugin to WordPress SVN
     runs-on: ubuntu-latest
+    concurrency:
+      group: wordpress-svn-deploy
+      cancel-in-progress: false
 
     steps:
-      - name: Validate Manual Deployment Confirmation
+      - name: Validate Deployment Request
         run: |
-          if [ "${{ github.event.inputs.dry_run }}" != "true" ] && [ "${{ github.event.inputs.dry_run }}" != "false" ]; then
-            echo "Invalid dry_run value. Use true or false."
-            exit 1
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.dry_run }}" != "true" ] && [ "${{ github.event.inputs.dry_run }}" != "false" ]; then
+              echo "Invalid dry_run value. Use true or false."
+              exit 1
+            fi
+            if [ "${{ github.event.inputs.confirm_deploy }}" != "CONFIRM_DEPLOY" ]; then
+              echo "Invalid confirmation phrase. Aborting deployment."
+              exit 1
+            fi
+            if [ "${{ github.event.inputs.deploy_target }}" != "wordpress-svn" ]; then
+              echo "Invalid deployment target confirmation. Aborting deployment."
+              exit 1
+            fi
+            echo "DRY_RUN=${{ github.event.inputs.dry_run }}" >> "$GITHUB_ENV"
+            echo "Dry run mode: ${{ github.event.inputs.dry_run }}"
+            exit 0
           fi
-          if [ "${{ github.event.inputs.confirm_deploy }}" != "CONFIRM_DEPLOY" ]; then
-            echo "Invalid confirmation phrase. Aborting deployment."
-            exit 1
+
+          if [ "${{ github.event_name }}" = "release" ]; then
+            if [ "${{ github.event.release.prerelease }}" = "true" ]; then
+              echo "Prerelease publication does not deploy to WordPress SVN."
+              exit 1
+            fi
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+            RELEASE_VERSION="${RELEASE_TAG#v}"
+            if ! printf '%s' "$RELEASE_VERSION" | grep -Eq '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+              echo "Release tag must be vX.Y.Z or X.Y.Z, got: $RELEASE_TAG"
+              exit 1
+            fi
+            echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+            echo "DRY_RUN=false" >> "$GITHUB_ENV"
+            echo "GitHub release $RELEASE_TAG will deploy version $RELEASE_VERSION to WordPress SVN."
+            exit 0
           fi
-          if [ "${{ github.event.inputs.deploy_target }}" != "wordpress-svn" ]; then
-            echo "Invalid deployment target confirmation. Aborting deployment."
-            exit 1
-          fi
-          echo "Dry run mode: ${{ github.event.inputs.dry_run }}"
+
+          echo "Unsupported event: ${{ github.event_name }}"
+          exit 1
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref }}
 
       - name: Install SVN
         run: sudo apt-get update && sudo apt-get install -y subversion
@@ -58,6 +90,10 @@ jobs:
           fi
           if ! printf '%s' "$PLUGIN_VERSION" | grep -Eq '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
             echo "Stable tag has invalid format: $PLUGIN_VERSION"
+            exit 1
+          fi
+          if [ -n "${RELEASE_VERSION:-}" ] && [ "$PLUGIN_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "Release tag version ($RELEASE_VERSION) does not match Stable tag ($PLUGIN_VERSION)."
             exit 1
           fi
           echo "Plugin Version detected: $PLUGIN_VERSION"
@@ -91,7 +127,7 @@ jobs:
           echo "Committing trunk changes to SVN..."
           cd svn-wordpress
           if svn status trunk | grep -q '^[AMDR!]'; then
-            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
               echo "Dry run enabled. Skipping SVN trunk commit."
               svn status trunk
             else
@@ -123,7 +159,7 @@ jobs:
           echo "Committing new tag to SVN..."
           cd svn-wordpress
           if svn status "tags/$PLUGIN_VERSION" | grep -q '^[AMDR!]'; then
-            if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
               echo "Dry run enabled. Skipping SVN tag commit."
               svn status "tags/$PLUGIN_VERSION"
             else
