@@ -8,7 +8,7 @@ browser-update.org remains the upstream source for browser detection and notific
 
 Retrieved from `https://browser-update.org/` on 2026-05-03.
 
-Upstream file | Upstream URL | SHA-256 of retrieved upstream file | Shipped file
+Upstream file|Upstream URL|SHA-256 of retrieved upstream file|Shipped file
 -|-|-|-
 `update.min.js`|`https://browser-update.org/update.min.js`|`d0732d97fb1d79bb3caf374e0a26923eac41fc211ecfc450cb8f73899841acbd`|`update.min.js`
 `update.show.min.js`|`https://browser-update.org/update.show.min.js`|`9976811f7fd2ad3a89cc3f3450f9655938c39f3869de8000e50030e10a502747`|`update.show.wpbu.min.js`
@@ -32,8 +32,8 @@ The plugin loads `update.min.js`. That script is configured to require an explic
 2. Record the retrieval date and SHA-256 hashes in this file.
 3. Compare upstream changes against the shipped files.
 4. Reapply the WP BrowserUpdate changes deliberately:
-   - keep the runtime loader local-only; no fallback to `browser-update.org` scripts
-   - keep notification/test styles in `update.show.wpbu.css`, not generated `<style>` blocks
-   - keep test mode loading `update.test.wpbu.js`
-   - keep the default update link independent from `browser-update.org`
+    - keep the runtime loader local-only; no fallback to `browser-update.org` scripts
+    - keep notification/test styles in `update.show.wpbu.css`, not generated `<style>` blocks
+    - keep test mode loading `update.test.wpbu.js`
+    - keep the default update link independent from `browser-update.org`
 5. Run PHP syntax checks and `node --check` for all shipped JavaScript files.

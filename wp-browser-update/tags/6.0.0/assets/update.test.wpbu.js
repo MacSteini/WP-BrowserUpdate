@@ -7,49 +7,49 @@
 // Shows debug information and a note that the browser may actually not be outdated.
 "use strict";
 var $buo_test_ = function () {
-    var op = window._buorgres;
-    var bb = $bu_getBrowser();
+var op = window._buorgres;
+var bb = $bu_getBrowser();
 
-    var div = document.createElement("div");
-    div.className = "buorg-test";
-
-
-    if (op.style === "bottom")
-        div.className += " buorg-test-bottom";
-    if (op.style === "corner")
-        div.className += " buorg-test-corner";
-
-    var h = '<div>Browser Notification Debug-Mode (v'+op.jsv+')</div>';
+var div = document.createElement("div");
+div.className = "buorg-test";
 
 
-    h += '<div class="buorg-test-sub">'
-    h += "<div>Browser would normally be notified: " + op.notified + "</div>";
+if (op.style === "bottom")
+div.className += " buorg-test-bottom";
+if (op.style === "corner")
+div.className += " buorg-test-corner";
 
-    if (op.reasons.length>0)
-        h += "<div><b>Reasons to show</b>: " + op.reasons.join(",") + "</div>";
+var h = '<div>Browser Notification Debug-Mode (v'+op.jsv+')</div>';
 
-    if (op.hide_reasons.length>0)
-        h += "<div><b>Reasons to hide</b>: " + op.hide_reasons.join(",") + "</div>"
 
-    h += "<div><b>Browser info</b></div>";
-    h += "<span>is_latest:" + bb.is_latest + "</span>, ";
-    h += "<span>is_insecure:" + bb.is_insecure + "</span>, ";
-    h += "<span>other:" + bb.other + "</span>, ";
-    h += "<span>no_device_update:" + bb.no_device_update + "</span>, ";
-    h += "<span>cookie set:" + (document.cookie.indexOf("browserupdateorg=pause")>-1) + "</span>";
+h += '<div class="buorg-test-sub">'
+h += "<div>Browser would normally be notified: " + op.notified + "</div>";
 
-    h += '</div>'
+if (op.reasons.length>0)
+h += "<div><b>Reasons to show</b>: " + op.reasons.join(",") + "</div>";
 
-    div.innerHTML = h;
-    div.onclick = function (e) {
-        e = e || window.event;
-        if (e.stopPropagation) e.stopPropagation();
-        else e.cancelBubble = true;
+if (op.hide_reasons.length>0)
+h += "<div><b>Reasons to hide</b>: " + op.hide_reasons.join(",") + "</div>"
 
-        div.parentNode.removeChild(div);
-        return false;
-    }
-    op.div.appendChild(div);
+h += "<div><b>Browser info</b></div>";
+h += "<span>is_latest:" + bb.is_latest + "</span>, ";
+h += "<span>is_insecure:" + bb.is_insecure + "</span>, ";
+h += "<span>other:" + bb.other + "</span>, ";
+h += "<span>no_device_update:" + bb.no_device_update + "</span>, ";
+h += "<span>cookie set:" + (document.cookie.indexOf("browserupdateorg=pause")>-1) + "</span>";
+
+h += '</div>'
+
+div.innerHTML = h;
+div.onclick = function (e) {
+e = e || window.event;
+if (e.stopPropagation) e.stopPropagation();
+else e.cancelBubble = true;
+
+div.parentNode.removeChild(div);
+return false;
+}
+op.div.appendChild(div);
 
 
 }();
