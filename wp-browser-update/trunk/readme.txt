@@ -18,6 +18,15 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
+== How it works ==
+WP BrowserUpdate connects WordPress to the Browser-Update.org service. After activation, the plugin loads the Browser-Update.org notification script on public pages and passes your configured browser-version thresholds to that script. The notification is shown only when Browser-Update.org detects a browser that matches your settings.
+
+The settings page is available under **Settings > WP BrowserUpdate**. You can define the browser versions that should trigger a notification, choose where the message appears, enable testing mode, decide whether mobile or unsupported browsers should be notified, and add trusted custom CSS for the notification.
+
+Browser version fields accept plain version numbers such as `115` or `115.0.1`. A value of `0` uses the default Browser-Update.org outdated-browser detection. Negative values are migrated to concrete version numbers by checking the latest browser versions from the configured external sources. These checks are cached for 6 hours by default and can be adjusted by developers with the `wpbu_browser_version_cache_hours` filter.
+
+This plugin depends on Browser-Update.org for the visitor-facing notification logic. If that external service is blocked or unavailable, the notification may not appear.
+
 == Important Notice ==
 **Breaking Changes in Version 5.0**
 - Requires **PHP 7.4** or newer.
@@ -70,6 +79,8 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     * Admin settings page follows WordPress admin standards
     * Cleaner field structure: Improved markup and consistency of settings form fields
     * Security: Improved sanitization and nonce handling for all settings fields
+    * Hardening: Uses the WordPress HTTP API for remote version checks
+    * Hardening: Loads the Browser-Update.org service script through the WordPress script queue
     * Performance: Fewer unnecessary remote lookups when opening the admin settings page
 * Fixed:
     * Prevented a frontend "Uncaught Error" caused by invalid/unexpected browser version strings by hardening version parsing and normalization. Thanks to @danyloliptuha for pointing out.
