@@ -33,7 +33,7 @@ This plugin bundles the browser-update.org notification scripts and styles to av
 **Breaking Changes in Version 6.0**
 - Version 6.0.0 introduces a new structured settings model to support the full browser-update.org customization surface.
 - Existing WP BrowserUpdate settings from version 5.x are migrated automatically.
-- Version 5.2.0 remains available as the final non-breaking CSP-compatible release for users who want local browser-update.org runtime loading without the advanced settings model.
+- [Version 5.2.0](https://downloads.wordpress.org/plugin/wp-browser-update.5.2.0.zip "Download WP BrowserUpdate from WordPress.org") remains available as the final non-breaking CSP-compatible release for users who want local browser-update.org runtime loading without the advanced settings model.
 
 **Breaking Changes in Version 5.0**
 - Requires **PHP 7.4** or newer.
