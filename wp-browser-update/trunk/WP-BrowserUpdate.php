@@ -37,15 +37,27 @@ function wpbu_browser_keys() {
 return array_keys(wpbu_browser_configs());
 }
 
+function wpbu_primary_browser_keys() {
+return array('c', 'f', 's', 'e', 'o');
+}
+
+function wpbu_additional_browser_keys() {
+return array_values(array_diff(wpbu_browser_keys(), wpbu_primary_browser_keys()));
+}
+
 function wpbu_text_fields() {
 return array('msg', 'insecure', 'msgmore', 'bupdate', 'bignore', 'remind', 'bnever');
+}
+
+function wpbu_default_text_values() {
+return array('msg' => 'Your web browser ({brow_name}) is out of date.', 'insecure' => 'Your web browser ({brow_name}) has a serious security vulnerability!', 'msgmore' => 'Update your browser for more security, speed and the best experience on this site.', 'bupdate' => 'Update browser', 'bignore' => 'Ignore', 'remind' => 'You will be reminded in {days} days.', 'bnever' => 'Never show again');
 }
 
 function wpbu_default_options() {
 $required = array();
 foreach (wpbu_browser_keys() as $key) $required[$key] = '0';
 
-return array('required' => $required, 'behaviour' => array('reminder' => '12', 'reminderClosed' => '168', 'test' => 'false', 'newwindow' => 'true', 'style' => 'top', 'shift_page_down' => 'true', 'notify_esr' => 'false', 'insecure' => 'true', 'unsupported' => 'true', 'mobile' => 'true', 'noclose' => 'false', 'nomessage' => 'false', 'no_permanent_hide' => 'false', 'container' => ''), 'links' => array('url' => '', 'url_permanent_hide' => '', 'burl' => ''), 'language' => array('l' => ''), 'text' => array('default' => array_fill_keys(wpbu_text_fields(), ''), 'overrides_json' => ''), 'callbacks' => array('onshow' => '', 'onclick' => '', 'onclose' => ''), 'custom_css' => '');
+return array('required' => $required, 'behaviour' => array('reminder' => '12', 'reminderClosed' => '168', 'test' => 'false', 'newwindow' => 'true', 'style' => 'top', 'shift_page_down' => 'true', 'notify_esr' => 'false', 'insecure' => 'true', 'unsupported' => 'true', 'mobile' => 'true', 'noclose' => 'false', 'no_permanent_hide' => 'false', 'container' => ''), 'links' => array('url' => '', 'url_permanent_hide' => '', 'burl' => ''), 'language' => array('l' => ''), 'text' => array('default' => array_fill_keys(wpbu_text_fields(), ''), 'overrides_json' => ''), 'custom_css' => '');
 }
 
 function wpbu_legacy_browser_order() {
@@ -179,12 +191,6 @@ $value = trim(wpbu_unslash_scalar($value));
 return $value==='' ? '' : esc_url_raw($value);
 }
 
-function wpbu_sanitize_callback_name($value) {
-$value = trim(wpbu_unslash_scalar($value));
-
-return preg_match('/^(?:window\.)?[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*$/', $value) ? $value : '';
-}
-
 function wpbu_sanitize_container_selector($value) {
 $value = trim(sanitize_text_field(wpbu_unslash_scalar($value)));
 
@@ -262,7 +268,7 @@ $output['behaviour']['reminder'] = wpbu_sanitize_number_string($value['behaviour
 $output['behaviour']['reminderClosed'] = wpbu_sanitize_number_string($value['behaviour']['reminderClosed'] ?? $defaults['behaviour']['reminderClosed'], $defaults['behaviour']['reminderClosed'], 0, 9999);
 $output['behaviour']['style'] = wpbu_sanitize_style_setting($value['behaviour']['style'] ?? $defaults['behaviour']['style']);
 
-foreach (array('test', 'newwindow', 'shift_page_down', 'notify_esr', 'insecure', 'unsupported', 'mobile', 'noclose', 'nomessage', 'no_permanent_hide') as $key) {
+foreach (array('test', 'newwindow', 'shift_page_down', 'notify_esr', 'insecure', 'unsupported', 'mobile', 'noclose', 'no_permanent_hide') as $key) {
 $output['behaviour'][$key] = wpbu_sanitize_bool_string($value['behaviour'][$key] ?? $defaults['behaviour'][$key], $defaults['behaviour'][$key]);
 }
 $output['behaviour']['container'] = wpbu_sanitize_container_selector($value['behaviour']['container'] ?? '');
@@ -274,8 +280,6 @@ $output['links'][$key] = wpbu_sanitize_url_setting($value['links'][$key] ?? '');
 $output['language']['l'] = wpbu_sanitize_language_setting($value['language']['l'] ?? '');
 $output['text']['default'] = wpbu_sanitize_text_value($value['text']['default'] ?? array());
 $output['text']['overrides_json'] = wpbu_sanitize_text_overrides_json($value['text']['overrides_json'] ?? '');
-
-foreach (array('onshow', 'onclick', 'onclose') as $key) $output['callbacks'][$key] = wpbu_sanitize_callback_name($value['callbacks'][$key] ?? '');
 
 $output['custom_css'] = wpbu_sanitize_custom_css($value['custom_css'] ?? '');
 
@@ -319,7 +323,7 @@ return array('jsshowurl' => plugins_url(WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE, __
 
 function wpbu_get_buoop_config() {
 $options = wpbu_get_options();
-$config = array_merge(array('required' => array(), 'reminder' => (int) $options['behaviour']['reminder'], 'reminderClosed' => (int) $options['behaviour']['reminderClosed'], 'test' => $options['behaviour']['test']==='true', 'newwindow' => $options['behaviour']['newwindow']==='true', 'style' => $options['behaviour']['style'], 'shift_page_down' => $options['behaviour']['shift_page_down']==='true', 'notify_esr' => $options['behaviour']['notify_esr']==='true', 'insecure' => $options['behaviour']['insecure']==='true', 'unsupported' => $options['behaviour']['unsupported']==='true', 'mobile' => $options['behaviour']['mobile']==='true', 'noclose' => $options['behaviour']['noclose']==='true', 'nomessage' => $options['behaviour']['nomessage']==='true', 'no_permanent_hide' => $options['behaviour']['no_permanent_hide']==='true'), wpbu_runtime_config());
+$config = array_merge(array('required' => array(), 'reminder' => (int) $options['behaviour']['reminder'], 'reminderClosed' => (int) $options['behaviour']['reminderClosed'], 'test' => $options['behaviour']['test']==='true', 'newwindow' => $options['behaviour']['newwindow']==='true', 'style' => $options['behaviour']['style'], 'shift_page_down' => $options['behaviour']['shift_page_down']==='true', 'notify_esr' => $options['behaviour']['notify_esr']==='true', 'insecure' => $options['behaviour']['insecure']==='true', 'unsupported' => $options['behaviour']['unsupported']==='true', 'mobile' => $options['behaviour']['mobile']==='true', 'noclose' => $options['behaviour']['noclose']==='true', 'no_permanent_hide' => $options['behaviour']['no_permanent_hide']==='true'), wpbu_runtime_config());
 
 foreach (wpbu_browser_keys() as $key) $config['required'][$key] = wpbu_format_required_version_for_buorg($options['required'][$key] ?? '0');
 
@@ -333,9 +337,6 @@ if (!empty($options['behaviour']['container'])) $config['_wpbu_container'] = $op
 
 $config = array_merge($config, wpbu_build_text_config($options['text']));
 
-$callbacks = array_filter($options['callbacks']);
-if (!empty($callbacks)) $config['_wpbu_callbacks'] = $callbacks;
-
 return $config;
 }
 
@@ -348,9 +349,7 @@ wp_enqueue_script('wp-browser-update-browserupdate', plugins_url(WPBU_BROWSER_UP
 
 function wpbu_render_config_js() {
 $config = wpbu_get_buoop_config();
-$callbacks = isset($config['_wpbu_callbacks']) ? $config['_wpbu_callbacks'] : array();
 $container = isset($config['_wpbu_container']) ? $config['_wpbu_container'] : '';
-unset($config['_wpbu_callbacks']);
 unset($config['_wpbu_container']);
 
 header('Content-Type: application/javascript; charset='.get_option('blog_charset'));
@@ -360,13 +359,6 @@ if ($container!=='') {
 echo "\n(function(config, selector) {";
 echo 'try{var el=document.querySelector(selector);if(el){config.container=el;}}catch(e){}';
 echo '})(window.$buoop, '.wp_json_encode($container, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).');';
-}
-
-if (!empty($callbacks)) {
-echo "\n(function(config, callbacks) {";
-echo 'function resolve(name){var parts=name.replace(/^window\./,"").split("."), scope=window; for(var i=0;i<parts.length;i++){scope=scope&&scope[parts[i]];} return typeof scope==="function"?scope:null;}';
-echo 'Object.keys(callbacks).forEach(function(key){var fn=resolve(callbacks[key]); if(fn){config[key]=function(infos){return fn(infos);};}});';
-echo '})(window.$buoop, '.wp_json_encode($callbacks, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE).');';
 }
 
 exit;
@@ -386,20 +378,32 @@ exit;
 
 function wpbu_register_settings() {
 register_setting('wp_browserupdate', WPBU_OPTIONS_NAME, 'wpbu_sanitize_options');
-add_settings_section('wpbu_browser_versions', __('Outdated Browser Versions', 'wp-browser-update'), 'wpbu_render_browser_versions_section', 'wp-browserupdate');
-add_settings_field('wpbu_required_versions', __('Required versions', 'wp-browser-update'), 'wpbu_render_browser_versions_field', 'wp-browserupdate', 'wpbu_browser_versions');
+add_settings_section('wpbu_primary_browser_versions', __('Regular Browser Versions', 'wp-browser-update'), 'wpbu_render_primary_browser_versions_section', 'wp-browserupdate');
+foreach (wpbu_primary_browser_keys() as $key) {
+$browser = wpbu_browser_configs()[$key];
+add_settings_field('wpbu_required_'.$key, wpbu_browser_settings_title($browser), 'wpbu_render_browser_version_field', 'wp-browserupdate', 'wpbu_primary_browser_versions', array('key' => $key));
+}
+add_settings_section('wpbu_additional_browser_versions', __('Additional Browser Targets', 'wp-browser-update'), 'wpbu_render_additional_browser_versions_section', 'wp-browserupdate');
+foreach (wpbu_additional_browser_keys() as $key) {
+$browser = wpbu_browser_configs()[$key];
+add_settings_field('wpbu_required_'.$key, wpbu_browser_settings_title($browser), 'wpbu_render_browser_version_field', 'wp-browserupdate', 'wpbu_additional_browser_versions', array('key' => $key));
+}
 add_settings_section('wpbu_behaviour', __('Notification Behaviour', 'wp-browser-update'), 'wpbu_render_behaviour_section', 'wp-browserupdate');
-add_settings_field('wpbu_behaviour_fields', __('Behaviour options', 'wp-browser-update'), 'wpbu_render_behaviour_fields', 'wp-browserupdate', 'wpbu_behaviour');
+foreach (wpbu_behaviour_field_configs() as $key => $field) {
+add_settings_field('wpbu_behaviour_'.$key, $field['label'], 'wpbu_render_behaviour_field', 'wp-browserupdate', 'wpbu_behaviour', array('key' => $key, 'label_for' => 'wpbu_behaviour_'.$key));
+}
 add_settings_section('wpbu_links', __('Links', 'wp-browser-update'), 'wpbu_render_links_section', 'wp-browserupdate');
-add_settings_field('wpbu_link_fields', __('Link options', 'wp-browser-update'), 'wpbu_render_link_fields', 'wp-browserupdate', 'wpbu_links');
+foreach (wpbu_link_field_configs() as $key => $field) {
+add_settings_field('wpbu_link_'.$key, $field['label'], 'wpbu_render_link_field', 'wp-browserupdate', 'wpbu_links', array('key' => $key, 'label_for' => 'wpbu_link_'.$key));
+}
 add_settings_section('wpbu_language_text', __('Language and Text', 'wp-browser-update'), 'wpbu_render_language_text_section', 'wp-browserupdate');
-add_settings_field('wpbu_language_text_fields', __('Language and message text', 'wp-browser-update'), 'wpbu_render_language_text_fields', 'wp-browserupdate', 'wpbu_language_text');
-add_settings_section('wpbu_callbacks', __('Callbacks', 'wp-browser-update'), 'wpbu_render_callbacks_section', 'wp-browserupdate');
-add_settings_field('wpbu_callback_fields', __('Callback function names', 'wp-browser-update'), 'wpbu_render_callback_fields', 'wp-browserupdate', 'wpbu_callbacks');
+add_settings_field('wpbu_language', __('Fixed language', 'wp-browser-update'), 'wpbu_render_language_field', 'wp-browserupdate', 'wpbu_language_text', array('label_for' => 'wpbu_language'));
+foreach (wpbu_text_fields() as $field) {
+add_settings_field('wpbu_text_'.$field, sprintf(__('Message text: %s', 'wp-browser-update'), $field), 'wpbu_render_text_field', 'wp-browserupdate', 'wpbu_language_text', array('key' => $field, 'label_for' => 'wpbu_text_'.$field));
+}
+add_settings_field('wpbu_text_overrides', __('Language/browser text overrides JSON', 'wp-browser-update'), 'wpbu_render_text_overrides_field', 'wp-browserupdate', 'wpbu_language_text', array('label_for' => 'wpbu_text_overrides'));
 add_settings_section('wpbu_custom_css', __('Custom CSS', 'wp-browser-update'), 'wpbu_render_custom_css_section', 'wp-browserupdate');
 add_settings_field('wpbu_custom_css_field', __('Custom CSS', 'wp-browser-update'), 'wpbu_render_custom_css_field', 'wp-browserupdate', 'wpbu_custom_css');
-add_settings_section('wpbu_runtime', __('Runtime', 'wp-browser-update'), 'wpbu_render_runtime_section', 'wp-browserupdate');
-add_settings_field('wpbu_runtime_fields', __('Locked local runtime values', 'wp-browser-update'), 'wpbu_render_runtime_fields', 'wp-browserupdate', 'wpbu_runtime');
 }
 
 function wpbu_admin_options() {
@@ -409,83 +413,133 @@ if ($options===null) $options = wpbu_get_options();
 return $options;
 }
 
-function wpbu_render_browser_versions_section() {
-echo '<p>'.esc_html__('Configure the required version for every browser key supported by the bundled runtime.', 'wp-browser-update').'</p><p>'.esc_html__('Use 0 for default detection, a major version such as 137, an exact dotted version such as 137.0.3912.63, or a negative whole number such as -2 for latest minus 2 major versions.', 'wp-browser-update').'</p>';
+function wpbu_browser_settings_title($browser) {
+$name = isset($browser['name']) ? (string) $browser['name'] : '';
+$download = isset($browser['download']) ? (string) $browser['download'] : '';
+if ($download==='') return esc_html($name);
+
+return '<a href="'.esc_url($download).'" target="_blank" rel="noopener noreferrer">'.esc_html($name).'</a>';
 }
 
-function wpbu_render_browser_versions_field() {
+function wpbu_render_primary_browser_versions_section() {
+echo '<p>'.esc_html__('Configure the required version for the regular desktop browser targets.', 'wp-browser-update').'</p><p>'.esc_html__('Use 0 for default detection, a major version such as 137, an exact dotted version such as 137.0.3912.63, or a negative whole number such as -2 for latest minus 2 major versions.', 'wp-browser-update').'</p>';
+}
+
+function wpbu_render_additional_browser_versions_section() {
+echo '<p>'.esc_html__('These targets are supported by the bundled runtime but are less common or legacy-specific. Leave them at 0 unless you intentionally want to configure them separately.', 'wp-browser-update').'</p>';
+}
+
+function wpbu_render_browser_version_field($args) {
+$key = $args['key'] ?? '';
 $options = wpbu_admin_options();
 $configs = wpbu_browser_configs();
-echo '<table class="widefat striped"><tbody>';
-foreach ($configs as $key => $browser) {
+if (!isset($configs[$key])) return;
+
+$browser = $configs[$key];
 $field_id = 'wpbu_required_'.$key;
-echo '<tr><th scope="row"><label for="'.esc_attr($field_id).'">'.esc_html($browser['name']).' <code>'.esc_html($key).'</code></label></th><td><input type="text" class="regular-text code" pattern="(?:-?[0-9]+|[0-9]+(?:\.[0-9]+)+)" name="'.esc_attr(WPBU_OPTIONS_NAME).'[required]['.esc_attr($key).']" id="'.esc_attr($field_id).'" value="'.esc_attr($options['required'][$key]).'" /> <a href="'.esc_url($browser['download']).'" target="_blank" rel="noopener noreferrer">'.esc_html__('Browser download page', 'wp-browser-update').'</a></td></tr>';
+$description_id = $field_id.'_description';
+$selected = $options['required'][$key] ?? '0';
+$required_version = wpbu_format_required_version_for_buorg($selected);
+$latest_version = '';
+if (!empty($browser['url']) && !empty($browser['xpath'])) {
+$regex = isset($browser['regex']) ? $browser['regex'] : '/\d+(\.\d+)+/';
+$latest_version = wpbu_getversion_cached($browser['url'], $browser['xpath'], $regex);
 }
-echo '</tbody></table>';
+
+echo '<input type="text" class="regular-text code" pattern="(?:-?[0-9]+|[0-9]+(?:\.[0-9]+)+)" name="'.esc_attr(WPBU_OPTIONS_NAME).'[required]['.esc_attr($key).']" id="'.esc_attr($field_id).'" value="'.esc_attr($selected).'" aria-label="'.esc_attr($browser['name']).'" aria-describedby="'.esc_attr($description_id).'" title="'.esc_attr__('Use a whole number, a positive dotted version, or a negative whole number.', 'wp-browser-update').'" />';
+echo '<p class="description" id="'.esc_attr($description_id).'">';
+if ($required_version===0) echo esc_html__('Detection: show all outdated versions (default)', 'wp-browser-update');
+elseif (is_int($required_version) && $required_version<0) echo sprintf(esc_html__('Detection: latest minus %d major versions', 'wp-browser-update'), abs($required_version));
+elseif (is_string($required_version)) echo sprintf(esc_html__('Detection uses exact version: %s', 'wp-browser-update'), esc_html($required_version));
+else echo sprintf(esc_html__('Detection uses major version: %s', 'wp-browser-update'), esc_html($required_version));
+if ($latest_version!=='') echo ' '.esc_html__('– Current version:', 'wp-browser-update').' '.esc_html($latest_version);
+echo '</p>';
 }
 
 function wpbu_render_behaviour_section() {
 echo '<p>'.esc_html__('These fields map to the documented bundled-runtime behaviour options.', 'wp-browser-update').'</p>';
 }
 
-function wpbu_yes_no_select($name, $value) {
-echo '<select name="'.esc_attr($name).'"><option value="true"'.selected($value, 'true', false).'>'.esc_html__('Yes', 'wp-browser-update').'</option><option value="false"'.selected($value, 'false', false).'>'.esc_html__('No', 'wp-browser-update').'</option></select>';
+function wpbu_behaviour_field_configs() {
+return array('style' => array('label' => __('Notification position', 'wp-browser-update'), 'type' => 'select', 'options' => array('top' => __('Top', 'wp-browser-update'), 'bottom' => __('Bottom', 'wp-browser-update'), 'corner' => __('Corner', 'wp-browser-update'))), 'container' => array('label' => __('Notification container', 'wp-browser-update'), 'type' => 'text', 'description' => __('Optional CSS selector for the element that should receive the notification. Leave blank to use the bundled runtime default placement.', 'wp-browser-update')), 'reminder' => array('label' => __('Reappearance interval in hours', 'wp-browser-update'), 'type' => 'number'), 'reminderClosed' => array('label' => __('Reappearance interval after explicit close in hours', 'wp-browser-update'), 'type' => 'number'), 'test' => array('label' => __('Testing mode', 'wp-browser-update'), 'type' => 'boolean'), 'newwindow' => array('label' => __('Open update link in a new tab', 'wp-browser-update'), 'type' => 'boolean'), 'shift_page_down' => array('label' => __('Shift page down', 'wp-browser-update'), 'type' => 'boolean'), 'notify_esr' => array('label' => __('Notify Firefox ESR', 'wp-browser-update'), 'type' => 'boolean'), 'insecure' => array('label' => __('Notify insecure browsers', 'wp-browser-update'), 'type' => 'boolean'), 'unsupported' => array('label' => __('Notify unsupported browsers', 'wp-browser-update'), 'type' => 'boolean'), 'mobile' => array('label' => __('Notify mobile browsers', 'wp-browser-update'), 'type' => 'boolean'), 'noclose' => array('label' => __('Hide ignore button', 'wp-browser-update'), 'type' => 'boolean'), 'no_permanent_hide' => array('label' => __('Disable permanent hide option', 'wp-browser-update'), 'type' => 'boolean'));
 }
 
-function wpbu_render_behaviour_fields() {
+function wpbu_render_yes_no_select($id, $name, $value) {
+echo '<select id="'.esc_attr($id).'" name="'.esc_attr($name).'"><option value="true"'.selected($value, 'true', false).'>'.esc_html__('Yes', 'wp-browser-update').'</option><option value="false"'.selected($value, 'false', false).'>'.esc_html__('No', 'wp-browser-update').'</option></select>';
+}
+
+function wpbu_render_behaviour_field($args) {
+$key = $args['key'] ?? '';
+$fields = wpbu_behaviour_field_configs();
+if (!isset($fields[$key])) return;
+
 $options = wpbu_admin_options();
 $behaviour = $options['behaviour'];
 $base = WPBU_OPTIONS_NAME.'[behaviour]';
-$fields = array('reminder' => __('Reappearance interval in hours', 'wp-browser-update'), 'reminderClosed' => __('Reappearance interval after explicit close in hours', 'wp-browser-update'), 'test' => __('Testing mode', 'wp-browser-update'), 'newwindow' => __('Open update link in a new tab', 'wp-browser-update'), 'shift_page_down' => __('Shift page down', 'wp-browser-update'), 'notify_esr' => __('Notify Firefox ESR', 'wp-browser-update'), 'insecure' => __('Notify insecure browsers', 'wp-browser-update'), 'unsupported' => __('Notify unsupported browsers', 'wp-browser-update'), 'mobile' => __('Notify mobile browsers', 'wp-browser-update'), 'noclose' => __('Hide ignore button', 'wp-browser-update'), 'nomessage' => __('Call onshow without showing a message', 'wp-browser-update'), 'no_permanent_hide' => __('Disable permanent hide option', 'wp-browser-update'));
+$field = $fields[$key];
+$field_id = 'wpbu_behaviour_'.$key;
+$name = $base.'['.$key.']';
 
-echo '<table class="widefat striped"><tbody><tr><th><label for="wpbu_style">'.esc_html__('Notification position', 'wp-browser-update').'</label></th><td><select id="wpbu_style" name="'.esc_attr($base).'[style]">';
-foreach (array('top' => __('Top', 'wp-browser-update'), 'bottom' => __('Bottom', 'wp-browser-update'), 'corner' => __('Corner', 'wp-browser-update')) as $value => $label) {
+if ($field['type']==='select') {
+echo '<select id="'.esc_attr($field_id).'" name="'.esc_attr($name).'">';
+foreach ($field['options'] as $value => $label) {
 echo '<option value="'.esc_attr($value).'"'.selected($behaviour['style'], $value, false).'>'.esc_html($label).'</option>';
 }
-echo '</select></td></tr><tr><th><label for="wpbu_container">'.esc_html__('Notification container', 'wp-browser-update').'</label></th><td><input type="text" class="regular-text code" id="wpbu_container" name="'.esc_attr($base).'[container]" value="'.esc_attr($behaviour['container']).'" placeholder="body" /><p class="description">'.esc_html__('Optional CSS selector for the element that should receive the notification. Leave blank to use the bundled runtime default placement.', 'wp-browser-update').'</p></td></tr>';
-
-foreach ($fields as $key => $label) {
-echo '<tr><th><label for="wpbu_behaviour_'.esc_attr($key).'">'.esc_html($label).'</label></th><td>';
-if (in_array($key, array('reminder', 'reminderClosed'), true)) echo '<input type="number" class="small-text" min="0" max="9999" id="wpbu_behaviour_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($behaviour[$key]).'" />';
-else wpbu_yes_no_select($base.'['.$key.']', $behaviour[$key]);
-echo '</td></tr>';
+echo '</select>';
+} elseif ($field['type']==='number') {
+echo '<input type="number" class="small-text" min="0" max="9999" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" />';
+} elseif ($field['type']==='text') {
+echo '<input type="text" class="regular-text code" id="'.esc_attr($field_id).'" name="'.esc_attr($name).'" value="'.esc_attr($behaviour[$key]).'" placeholder="body" />';
+} else {
+wpbu_render_yes_no_select($field_id, $name, $behaviour[$key]);
 }
-echo '</tbody></table>';
+if (!empty($field['description'])) echo '<p class="description">'.esc_html($field['description']).'</p>';
 }
 
 function wpbu_render_links_section() {
 echo '<p>'.esc_html__('Optional update-link options. Leave blank to use the bundled runtime defaults.', 'wp-browser-update').'</p>';
 }
 
-function wpbu_render_link_fields() {
+function wpbu_link_field_configs() {
+return array('url' => array('label' => __('Update URL', 'wp-browser-update'), 'description' => __('Use this only when the update button should open your own support, intranet, or software-management page instead of the runtime default.', 'wp-browser-update')), 'url_permanent_hide' => array('label' => __('Permanent-hide URL', 'wp-browser-update'), 'description' => __('Optional target for the permanent-hide action. Leave blank unless you have a dedicated policy or support page for this workflow.', 'wp-browser-update')), 'burl' => array('label' => __('Base update URL', 'wp-browser-update'), 'description' => __('Optional base URL for custom browser update links. Most sites should leave this empty.', 'wp-browser-update')));
+}
+
+function wpbu_render_link_field($args) {
+$key = $args['key'] ?? '';
+$fields = wpbu_link_field_configs();
+if (!isset($fields[$key])) return;
+
 $options = wpbu_admin_options();
 $base = WPBU_OPTIONS_NAME.'[links]';
-$fields = array('url' => __('Update URL', 'wp-browser-update'), 'url_permanent_hide' => __('Permanent-hide URL', 'wp-browser-update'), 'burl' => __('Base update URL', 'wp-browser-update'));
-
-foreach ($fields as $key => $label) echo '<p><label for="wpbu_link_'.esc_attr($key).'"><strong>'.esc_html($label).'</strong></label><br><input type="url" class="large-text code" id="wpbu_link_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['links'][$key]).'" /></p>';
+$description_id = 'wpbu_link_'.$key.'_description';
+echo '<input type="url" class="large-text code" id="wpbu_link_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['links'][$key]).'" aria-describedby="'.esc_attr($description_id).'" />';
+echo '<p class="description" id="'.esc_attr($description_id).'">'.esc_html($fields[$key]['description']).'</p>';
 }
 
 function wpbu_render_language_text_section() {
 echo '<p>'.esc_html__('Set a fixed language or override the bundled notification text. Text override JSON may contain keys such as text_de, text_for_i, or text_for_i_in_de.', 'wp-browser-update').'</p>';
 }
 
-function wpbu_render_language_text_fields() {
+function wpbu_render_language_field() {
+$options = wpbu_admin_options();
+echo '<input type="text" class="small-text code" id="wpbu_language" name="'.esc_attr(WPBU_OPTIONS_NAME).'[language][l]" value="'.esc_attr($options['language']['l']).'" placeholder="en" />';
+}
+
+function wpbu_render_text_field($args) {
+$key = $args['key'] ?? '';
+if (!in_array($key, wpbu_text_fields(), true)) return;
+
 $options = wpbu_admin_options();
 $base = WPBU_OPTIONS_NAME.'[text][default]';
-echo '<p><label for="wpbu_language"><strong>'.esc_html__('Fixed language', 'wp-browser-update').'</strong></label><br><input type="text" class="small-text code" id="wpbu_language" name="'.esc_attr(WPBU_OPTIONS_NAME).'[language][l]" value="'.esc_attr($options['language']['l']).'" placeholder="en" /></p>';
-
-foreach (wpbu_text_fields() as $field) echo '<p><label for="wpbu_text_'.esc_attr($field).'"><strong><code>'.esc_html($field).'</code></strong></label><br><textarea class="large-text" rows="2" id="wpbu_text_'.esc_attr($field).'" name="'.esc_attr($base).'['.esc_attr($field).']">'.esc_textarea($options['text']['default'][$field]).'</textarea></p>';
-
-echo '<p><label for="wpbu_text_overrides"><strong>'.esc_html__('Language/browser text overrides JSON', 'wp-browser-update').'</strong></label><br><textarea class="large-text code" rows="8" id="wpbu_text_overrides" name="'.esc_attr(WPBU_OPTIONS_NAME).'[text][overrides_json]">'.esc_textarea($options['text']['overrides_json']).'</textarea></p>';
+$defaults = wpbu_default_text_values();
+$description_id = 'wpbu_text_'.$key.'_description';
+echo '<input type="text" class="large-text" id="wpbu_text_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['text']['default'][$key]).'" aria-describedby="'.esc_attr($description_id).'" />';
+echo '<p class="description" id="'.esc_attr($description_id).'">'.sprintf(esc_html__('Default: %s', 'wp-browser-update'), esc_html($defaults[$key] ?? '')).'</p>';
 }
 
-function wpbu_render_callbacks_section() {
-echo '<p>'.esc_html__('Callbacks are configured as global JavaScript function names. Script bodies are not stored for security and CSP compatibility.', 'wp-browser-update').'</p>';
-}
-
-function wpbu_render_callback_fields() {
+function wpbu_render_text_overrides_field() {
 $options = wpbu_admin_options();
-foreach (array('onshow', 'onclick', 'onclose') as $key) echo '<p><label for="wpbu_callback_'.esc_attr($key).'"><strong><code>'.esc_html($key).'</code></strong></label><br><input type="text" class="regular-text code" id="wpbu_callback_'.esc_attr($key).'" name="'.esc_attr(WPBU_OPTIONS_NAME).'[callbacks]['.esc_attr($key).']" value="'.esc_attr($options['callbacks'][$key]).'" placeholder="window.wpbuCallbacks.'.esc_attr($key).'" /></p>';
+echo '<textarea class="large-text code" rows="8" id="wpbu_text_overrides" name="'.esc_attr(WPBU_OPTIONS_NAME).'[text][overrides_json]">'.esc_textarea($options['text']['overrides_json']).'</textarea>';
 }
 
 function wpbu_render_custom_css_section() {
@@ -495,18 +549,6 @@ echo '<p>'.esc_html__('Optional trusted CSS overrides for the bundled notificati
 function wpbu_render_custom_css_field() {
 $options = wpbu_admin_options();
 echo '<textarea id="wpbu_custom_css" name="'.esc_attr(WPBU_OPTIONS_NAME).'[custom_css]" rows="15" cols="45" class="large-text code" aria-describedby="wpbu_custom_css_description">'.esc_textarea($options['custom_css']).'</textarea><p class="description" id="wpbu_custom_css_description">'.sprintf(esc_html__('Override the default CSS with your own rules (%sread more%s). Leave blank to use the default.', 'wp-browser-update'), '<a href="https://browserupdate.org/customize.html" target="_blank" rel="noopener noreferrer">', '</a>').'</p>';
-}
-
-function wpbu_render_runtime_section() {
-echo '<p>'.esc_html__('These runtime options are locked by WP BrowserUpdate to keep the bundled runtime local and CSP-compatible.', 'wp-browser-update').'</p>';
-}
-
-function wpbu_render_runtime_fields() {
-$runtime = wpbu_runtime_config();
-
-echo '<table class="widefat striped"><tbody>';
-foreach ($runtime as $key => $value) echo '<tr><th><code>'.esc_html($key).'</code></th><td><code>'.esc_html((string) $value).'</code></td></tr>';
-echo '</tbody></table>';
 }
 
 function wpbu_render_settings_page() {
