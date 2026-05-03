@@ -16,10 +16,10 @@ if (!defined('ABSPATH')) {
 }
 
 define('MIN_PHP_VERSION', '7.4');
-define('WPBU_BROWSER_UPDATE_SCRIPT_FILE', 'assets/browser-update/update.min.js');
-define('WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE', 'assets/browser-update/update.show.wpbu.min.js');
-define('WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE', 'assets/browser-update/update.test.wpbu.js');
-define('WPBU_BROWSER_UPDATE_STYLE_FILE', 'assets/browser-update/update.show.wpbu.css');
+define('WPBU_BROWSER_UPDATE_SCRIPT_FILE', 'assets/update.min.js');
+define('WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE', 'assets/update.show.wpbu.min.js');
+define('WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE', 'assets/update.test.wpbu.js');
+define('WPBU_BROWSER_UPDATE_STYLE_FILE', 'assets/update.show.wpbu.css');
 define('WPBU_BROWSER_UPDATE_API_VERSION', 2026.01);
 define('WPBU_OPTIONS_NAME', 'wp_browserupdate_options');
 

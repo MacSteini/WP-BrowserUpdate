@@ -18,6 +18,8 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
+WP BrowserUpdate now runs independently from browser-update.org at display time. The frontend notification is served from the plugin's own bundled runtime files, so visitors do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
+
 == How it works ==
 WP BrowserUpdate bundles browser-update.org detection logic for WordPress. After activation, the plugin loads the local notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when the bundled detection logic matches a browser to your settings.
 
@@ -101,7 +103,7 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     * Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
     * Uses the WordPress Settings API for the admin settings page.
     * Splits admin settings handling into smaller validation, migration and rendering steps.
-    * Documents the browser-update.org service dependency and expected visitor-facing behaviour.
+    * Documents the bundled browser-update.org runtime, local frontend loading, and expected visitor-facing behaviour.
     * Passes dotted browser versions such as `137.0.3912.63` to the bundled runtime without reducing them to major versions.
     * Adds separate Microsoft Edge and Microsoft Internet Explorer thresholds.
     * Ships only the loaded runtime/adaptor files in the release package; upstream reference copies are documented by URL and hash rather than duplicated in the plugin ZIP.

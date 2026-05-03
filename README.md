@@ -15,6 +15,8 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
+WP BrowserUpdate now runs independently from browser-update.org at display time. The frontend notification is served from the plugin's own bundled runtime files, so visitors do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
+
 ## Important Notice
 > **Breaking Changes in Version 5.0.0**
 - Requires **PHP 7.4** or newer.
