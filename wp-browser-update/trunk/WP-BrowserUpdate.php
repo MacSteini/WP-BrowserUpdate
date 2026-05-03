@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 define('MIN_PHP_VERSION', '7.4');
-define('WPBU_BROWSER_UPDATE_SCRIPT_FILE', 'assets/browser-update/upstream/update.min.js');
+define('WPBU_BROWSER_UPDATE_SCRIPT_FILE', 'assets/browser-update/update.min.js');
 define('WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE', 'assets/browser-update/update.show.wpbu.min.js');
 define('WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE', 'assets/browser-update/update.test.wpbu.js');
 define('WPBU_BROWSER_UPDATE_STYLE_FILE', 'assets/browser-update/update.show.wpbu.css');
@@ -597,7 +597,7 @@ function wpbu_admin_options() {
 }
 
 function wpbu_render_browser_versions_section() {
-	echo '<p>' . esc_html__('Configure the required version for every browser key supported by the bundled browser-update.org runtime.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Configure the required version for every browser key supported by the bundled runtime.', 'wp-browser-update') . '</p>';
 	echo '<p>' . esc_html__('Use 0 for default detection, a major version such as 137, an exact dotted version such as 137.0.3912.63, or a negative whole number such as -2 for latest minus 2 major versions.', 'wp-browser-update') . '</p>';
 }
 
@@ -616,7 +616,7 @@ function wpbu_render_browser_versions_field() {
 }
 
 function wpbu_render_behaviour_section() {
-	echo '<p>' . esc_html__('These fields map to the documented browser-update.org behaviour options.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('These fields map to the documented bundled-runtime behaviour options.', 'wp-browser-update') . '</p>';
 }
 
 function wpbu_yes_no_select($name, $value) {
@@ -653,7 +653,7 @@ function wpbu_render_behaviour_fields() {
 	echo '</select></td></tr>';
 	echo '<tr><th><label for="wpbu_container">' . esc_html__('Notification container', 'wp-browser-update') . '</label></th><td>';
 	echo '<input type="text" class="regular-text code" id="wpbu_container" name="' . esc_attr($base) . '[container]" value="' . esc_attr($behaviour['container']) . '" placeholder="body" />';
-	echo '<p class="description">' . esc_html__('Optional CSS selector for the element that should receive the notification. Leave blank to use browser-update.org default placement.', 'wp-browser-update') . '</p>';
+	echo '<p class="description">' . esc_html__('Optional CSS selector for the element that should receive the notification. Leave blank to use the bundled runtime default placement.', 'wp-browser-update') . '</p>';
 	echo '</td></tr>';
 
 	foreach ($fields as $key => $label) {
@@ -669,7 +669,7 @@ function wpbu_render_behaviour_fields() {
 }
 
 function wpbu_render_links_section() {
-	echo '<p>' . esc_html__('Optional browser-update.org link options. Leave blank to use the bundled runtime defaults.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Optional update-link options. Leave blank to use the bundled runtime defaults.', 'wp-browser-update') . '</p>';
 }
 
 function wpbu_render_link_fields() {
@@ -678,7 +678,7 @@ function wpbu_render_link_fields() {
 	$fields = array(
 		'url'                => __('Update URL', 'wp-browser-update'),
 		'url_permanent_hide' => __('Permanent-hide URL', 'wp-browser-update'),
-		'burl'               => __('browser-update.org base URL', 'wp-browser-update'),
+		'burl'               => __('Base update URL', 'wp-browser-update'),
 	);
 
 	foreach ($fields as $key => $label) {
@@ -688,7 +688,7 @@ function wpbu_render_link_fields() {
 }
 
 function wpbu_render_language_text_section() {
-	echo '<p>' . esc_html__('Set a fixed language or override the browser-update.org notification text. Text override JSON may contain keys such as text_de, text_for_i, or text_for_i_in_de.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Set a fixed language or override the bundled notification text. Text override JSON may contain keys such as text_de, text_for_i, or text_for_i_in_de.', 'wp-browser-update') . '</p>';
 }
 
 function wpbu_render_language_text_fields() {
@@ -719,7 +719,7 @@ function wpbu_render_callback_fields() {
 }
 
 function wpbu_render_custom_css_section() {
-	echo '<p>' . esc_html__('Optional trusted CSS overrides for the browser-update.org notification.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('Optional trusted CSS overrides for the bundled notification.', 'wp-browser-update') . '</p>';
 }
 
 function wpbu_render_custom_css_field() {
@@ -729,7 +729,7 @@ function wpbu_render_custom_css_field() {
 }
 
 function wpbu_render_runtime_section() {
-	echo '<p>' . esc_html__('These browser-update.org options are locked by WP BrowserUpdate to keep the bundled runtime local and CSP-compatible.', 'wp-browser-update') . '</p>';
+	echo '<p>' . esc_html__('These runtime options are locked by WP BrowserUpdate to keep the bundled runtime local and CSP-compatible.', 'wp-browser-update') . '</p>';
 }
 
 function wpbu_render_runtime_fields() {

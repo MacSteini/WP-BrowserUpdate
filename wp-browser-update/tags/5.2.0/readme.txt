@@ -19,15 +19,15 @@ Visit [browserupdate.org](https://browserupdate.org/) for more details.
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
 
 == How it works ==
-WP BrowserUpdate connects WordPress to the browser-update.org service. After activation, the plugin loads the bundled browser-update.org notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when browser-update.org detection logic matches a browser to your settings.
+WP BrowserUpdate bundles browser-update.org detection logic for WordPress. After activation, the plugin loads the local notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when the bundled detection logic matches a browser to your settings.
 
 The settings page is available under **Settings > WP BrowserUpdate**. You can define the browser versions that should trigger a notification, choose where the message appears, enable testing mode, decide whether mobile or unsupported browsers should be notified, and add trusted custom CSS for the notification.
 
-Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to browser-update.org instead of being reduced to their major version; exact comparison depends on browser-update.org and the browser key used by that service. A value of `0` uses the default browser-update.org outdated-browser detection. Negative whole numbers are migrated to concrete version numbers where a latest-version source is configured. These checks are cached for 6 hours by default and can be adjusted by developers with the `wpbu_browser_version_cache_hours` filter.
+Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to the bundled runtime instead of being reduced to their major version; exact comparison depends on the bundled browser-update.org logic and the browser key used by that runtime. A value of `0` uses the default bundled outdated-browser detection. Negative whole numbers are migrated to concrete version numbers where a latest-version source is configured. These checks are cached for 6 hours by default and can be adjusted by developers with the `wpbu_browser_version_cache_hours` filter.
 
-Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to browser-update.org so the two browsers can use different thresholds.
+Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to the bundled runtime so the two browsers can use different thresholds.
 
-This plugin bundles the browser-update.org notification scripts and styles to avoid runtime blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. browser-update.org remains the upstream source of the detection logic. The unmodified upstream files are included for review, and WP BrowserUpdate uses clearly named CSP adapter files only where the upstream runtime would otherwise generate inline styles.
+This plugin bundles the browser-update.org notification runtime and styles to avoid runtime blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. The frontend notification runtime no longer depends on browser-update.org requests at display time. browser-update.org remains the upstream source used to refresh the bundled detection logic, with source URLs and hashes documented in the bundled asset README. WP BrowserUpdate ships only the local runtime and CSP adapter files needed by the plugin.
 
 == Important Notice ==
 **Breaking Changes in Version 5.0**
@@ -75,17 +75,18 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 = 5.2.0 =
 * Changed:
     * Takes the long-postponed step of making the browser-update.org integration CSP-compatible by shipping the complete runtime with the plugin, so sites on shared hosting or strict Content Security Policies no longer need to allow scripts from `browser-update.org`.
-    * Adds several browser-update.org asset files intentionally: unmodified upstream files are included for attribution and review, while clearly named WP BrowserUpdate adapter files remove runtime-generated inline styles.
+    * Adds the required browser-update.org runtime/adaptor asset files intentionally, with upstream source URLs and hashes documented for attribution and review.
     * Loads bundled browser-update.org runtime files from the plugin directory through the WordPress script queue.
-    * Includes unmodified upstream browser-update.org files with attribution, source URLs and hashes for review.
+    * Removes browser-update.org runtime requests from the frontend by loading only same-origin plugin assets.
     * Uses WP BrowserUpdate CSP adapter files for the notification and test-mode scripts so the runtime can avoid generated inline styles.
     * Moves the frontend browser-update.org configuration and notification styles to local, enqueueable assets for better compatibility with stricter Content Security Policies.
     * Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
     * Uses the WordPress Settings API for the admin settings page.
     * Splits admin settings handling into smaller validation, migration and rendering steps.
     * Documents the browser-update.org service dependency and expected visitor-facing behaviour.
-    * Passes dotted browser versions such as `137.0.3912.63` to browser-update.org without reducing them to major versions.
+    * Passes dotted browser versions such as `137.0.3912.63` to the bundled runtime without reducing them to major versions.
     * Adds separate Microsoft Edge and Microsoft Internet Explorer thresholds.
+    * Ships only the loaded runtime/adaptor files in the release package; upstream reference copies are documented by URL and hash rather than duplicated in the plugin ZIP.
 * Security:
     * Adds stricter settings validation before saving options.
     * Sanitizes custom CSS before saving and before frontend output.
