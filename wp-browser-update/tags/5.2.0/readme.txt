@@ -14,11 +14,11 @@ This plugin notifies website visitors to update their outdated browser in a non-
 == Description ==
 Many users still browse with outdated browsers, often unaware of the risks. Upgrading ensures better security and reliability. This plugin displays a subtle notification prompting visitors to update their browser. Activate the plugin, and it works seamlessly.
 
-Visit [browserupdate.org](https://browserupdate.org/) for more details.
+WP BrowserUpdate is based on the browser-update.org detection logic. The plugin now runs independently from browser-update.org at display time: the visitor-facing notification is served from the plugin's own bundled runtime files, so sites do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
+
+Visit [browserupdate.org](https://browserupdate.org/) for more details about the upstream project.
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
-
-WP BrowserUpdate now runs independently from browser-update.org at display time. The frontend notification is served from the plugin's own bundled runtime files, so visitors do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
 
 == How it works ==
 WP BrowserUpdate bundles browser-update.org detection logic for WordPress. After activation, the plugin loads the local notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when the bundled detection logic matches a browser to your settings.
@@ -29,7 +29,7 @@ Browser version fields accept major versions such as `115` and positive dotted v
 
 Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugin passes Edge as `e` and Internet Explorer as `i` to the bundled runtime so the two browsers can use different thresholds.
 
-This plugin bundles the browser-update.org notification runtime and styles to avoid runtime blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. The frontend notification runtime no longer depends on browser-update.org requests at display time. browser-update.org remains the upstream source used to refresh the bundled detection logic, with source URLs and hashes documented in the bundled asset README. WP BrowserUpdate ships only the local runtime and CSP adapter files needed by the plugin.
+This local runtime design avoids frontend blocking of external script URLs on sites with strict Content Security Policies or tracker blocking. WP BrowserUpdate ships only the local runtime and CSP adapter files needed by the plugin.
 
 == Important Notice ==
 **Breaking Changes in Version 5.0**

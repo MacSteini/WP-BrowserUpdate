@@ -11,11 +11,11 @@ This plugin notifies website visitors to update their outdated browser in a non-
 ## Description
 Many users still browse with outdated browsers, often unaware of the risks. Upgrading ensures better security and reliability. This plugin displays a subtle notification prompting visitors to update their browser. Activate the plugin, and it works seamlessly.
 
-Visit [browserupdate.org](https://browserupdate.org/) for more details.
+WP BrowserUpdate is based on the browser-update.org detection logic. The plugin now runs independently from browser-update.org at display time: the visitor-facing notification is served from the plugin's own bundled runtime files, so sites do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
+
+Visit [browserupdate.org](https://browserupdate.org/) for more details about the upstream project.
 
 Want to help translate this plugin? Visit the [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update).
-
-WP BrowserUpdate now runs independently from browser-update.org at display time. The frontend notification is served from the plugin's own bundled runtime files, so visitors do not need to load scripts, styles, or default notification links from browser-update.org. browser-update.org remains the credited upstream source for the bundled detection logic, and future runtime refreshes are tracked with source URLs and hashes in the plugin assets.
 
 ## Important Notice
 > **Breaking Changes in Version 5.0.0**

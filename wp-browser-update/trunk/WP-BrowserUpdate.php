@@ -465,9 +465,17 @@ function wpbu_build_text_config($text_options) {
 	return $config;
 }
 
+function wpbu_runtime_config() {
+	return array(
+		'jsshowurl' => plugins_url(WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE, __FILE__),
+		'domain'    => untrailingslashit(dirname(plugins_url(WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE, __FILE__))),
+		'api'       => WPBU_BROWSER_UPDATE_API_VERSION,
+	);
+}
+
 function wpbu_get_buoop_config() {
 	$options = wpbu_get_options();
-	$config = array(
+	$config = array_merge(array(
 		'required'        => array(),
 		'reminder'        => (int) $options['behaviour']['reminder'],
 		'reminderClosed'  => (int) $options['behaviour']['reminderClosed'],
@@ -482,10 +490,7 @@ function wpbu_get_buoop_config() {
 		'noclose'         => $options['behaviour']['noclose'] === 'true',
 		'nomessage'       => $options['behaviour']['nomessage'] === 'true',
 		'no_permanent_hide' => $options['behaviour']['no_permanent_hide'] === 'true',
-		'jsshowurl'       => plugins_url(WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE, __FILE__),
-		'domain'          => untrailingslashit(dirname(plugins_url(WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE, __FILE__))),
-		'api'             => WPBU_BROWSER_UPDATE_API_VERSION,
-	);
+	), wpbu_runtime_config());
 
 	foreach (wpbu_browser_keys() as $key) {
 		$config['required'][$key] = wpbu_format_required_version_for_buorg($options['required'][$key] ?? '0');
@@ -733,11 +738,7 @@ function wpbu_render_runtime_section() {
 }
 
 function wpbu_render_runtime_fields() {
-	$runtime = array(
-		'jsshowurl' => plugins_url(WPBU_BROWSER_UPDATE_SHOW_SCRIPT_FILE, __FILE__),
-		'domain'    => untrailingslashit(dirname(plugins_url(WPBU_BROWSER_UPDATE_TEST_SCRIPT_FILE, __FILE__))),
-		'api'       => WPBU_BROWSER_UPDATE_API_VERSION,
-	);
+	$runtime = wpbu_runtime_config();
 
 	echo '<table class="widefat striped"><tbody>';
 	foreach ($runtime as $key => $value) {
