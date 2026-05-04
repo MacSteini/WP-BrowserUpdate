@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WP BrowserUpdate for WordPress</title>
+<meta name="description" content="WP BrowserUpdate shows controlled browser update notices in WordPress and keeps visitor-facing runtime assets on your site.">
+<meta property="og:title" content="WP BrowserUpdate for WordPress">
+<meta property="og:description" content="Controlled browser update notices for WordPress with local runtime assets and clear settings.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://macsteini.github.io/WP-BrowserUpdate/">
+<meta property="og:image" content="https://macsteini.github.io/WP-BrowserUpdate/assets/wp-browser-update-banner-1544x500.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WP BrowserUpdate for WordPress">
+<meta name="twitter:description" content="Controlled browser update notices for WordPress with local runtime assets and clear settings.">
+<meta name="twitter:image" content="https://macsteini.github.io/WP-BrowserUpdate/assets/wp-browser-update-banner-1544x500.png">
+<link rel="canonical" href="https://macsteini.github.io/WP-BrowserUpdate/">
+<link rel="icon" href="./assets/wp-browser-update-icon.png" type="image/png">
+<link rel="stylesheet" href="./css.css">
+<script src="./js.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
+<header class="site-header">
+<div class="shell header-inner" id="top">
+<div class="brand-logo">
+<picture>
+<source srcset="./assets/wp-browser-update-banner-772x250.png" media="(max-width: 48rem)">
+<img src="./assets/wp-browser-update-banner-1544x500.png" alt="WP BrowserUpdate">
+</picture>
+</div>
+</div>
+</header>
+<main id="main-content">
+<section class="hero shell" aria-labelledby="hero-title">
+<div class="hero-copy">
+<p class="hero-note" data-i18n="hero.note">WordPress Plugin</p>
+<h1 id="hero-title" data-i18n="hero.title">Tell visitors when their browser is too old.</h1>
+<p class="lead" data-i18n="hero.lead">WP BrowserUpdate adds a clear browser update notice to WordPress. You set the browser limits, the text and the links; the plugin keeps the visitor-facing files on your own site.</p>
+<div class="hero-actions">
+<a class="button primary" href="https://wordpress.org/plugins/wp-browser-update/" data-i18n="actions.download">Installation</a>
+<a class="button secondary" href="https://github.com/MacSteini/WP-BrowserUpdate/releases/latest" data-i18n="actions.release">Latest Release</a>
+</div>
+</div>
+</section>
+<section class="section shell" id="visitors" aria-labelledby="visitors-title">
+<div class="section-head">
+<h2 id="visitors-title" data-i18n="visitors.title">What visitors see</h2>
+<p data-i18n="visitors.lead">A short, direct notice appears only when a visitor uses a browser below your configured threshold.</p>
+</div>
+<div class="signal-grid">
+<article class="signal-card">
+<span class="icon-badge" aria-hidden="true">
+<svg viewBox="0 0 24 24"><path d="M4 5h16v10H4V5Zm2 2v6h12V7H6Zm3 10h6v2H9v-2Z"></path></svg>
+</span>
+<h3 data-i18n="visitors.notice.title">A clear update prompt</h3>
+<p data-i18n="visitors.notice.body">The notice explains that the browser is outdated and points people to a current browser download.</p>
+</article>
+<article class="signal-card">
+<span class="icon-badge" aria-hidden="true">
+<svg viewBox="0 0 24 24"><path d="M7 4h10v2H7V4Zm-2 5h14v11H5V9Zm3 3v2h8v-2H8Zm0 4v2h5v-2H8Z"></path></svg>
+</span>
+<h3 data-i18n="visitors.timing.title">Only when needed</h3>
+<p data-i18n="visitors.timing.body">Modern browsers stay out of the flow. Older browsers get the nudge you chose.</p>
+</article>
+<article class="signal-card">
+<span class="icon-badge" aria-hidden="true">
+<svg viewBox="0 0 24 24"><path d="M12 3 4 7v10l8 4 8-4V7l-8-4Zm0 2.3 5.2 2.6L12 10.5 6.8 7.9 12 5.3ZM6 9.6l5 2.5v6.1l-5-2.5V9.6Zm12 0v6.1l-5 2.5v-6.1l5-2.5Z"></path></svg>
+</span>
+<h3 data-i18n="visitors.page.title">No third-party runtime request</h3>
+<p data-i18n="visitors.page.body">The public page loads the packaged runtime from your WordPress installation.</p>
+</article>
+</div>
+</section>
+<section class="section local-runtime shell" id="runtime" aria-labelledby="runtime-title">
+<div class="section-head">
+<h2 id="runtime-title" data-i18n="local.title">Built for stricter sites</h2>
+<p data-i18n="local.lead">Many sites use CSPs, privacy tools or tracker blocking. WP BrowserUpdate avoids a common failure point by serving the notification assets from the same site as the page.</p>
+</div>
+<ul class="runtime-list">
+<li data-i18n="local.sameOrigin">Same-origin scripts and styles for the browser notice.</li>
+<li data-i18n="local.control">Configuration stays in the WordPress admin area.</li>
+<li data-i18n="local.upstream">browser-update.org remains credited as the upstream notification project.</li>
+</ul>
+</section>
+<section class="section shell" id="configure" aria-labelledby="configure-title">
+<div class="section-head">
+<h2 id="configure-title" data-i18n="configure.title">Control the notice</h2>
+<p data-i18n="configure.lead">Keep the default setup simple, or tune the details when your audience needs stricter browser guidance.</p>
+</div>
+<div class="feature-matrix">
+<article>
+<span aria-hidden="true">↗</span>
+<h3 data-i18n="configure.versions.title">Browser thresholds</h3>
+<p data-i18n="configure.versions.body">Set defaults, major versions, negative offsets or exact dotted versions such as 137.0.3912.63.</p>
+</article>
+<article>
+<span aria-hidden="true">MS</span>
+<h3 data-i18n="configure.edge.title">Edge and Internet Explorer</h3>
+<p data-i18n="configure.edge.body">Treat modern Edge separately from legacy Internet Explorer.</p>
+</article>
+<article>
+<span aria-hidden="true">T</span>
+<h3 data-i18n="configure.test.title">Test mode</h3>
+<p data-i18n="configure.test.body">Force the notice while setting up, then turn test mode off for real traffic.</p>
+</article>
+<article>
+<span aria-hidden="true">CSS</span>
+<h3 data-i18n="configure.style.title">Styling</h3>
+<p data-i18n="configure.style.body">Add site-specific CSS without printing raw style blocks into the page.</p>
+</article>
+<article>
+<span aria-hidden="true">TXT</span>
+<h3 data-i18n="configure.text.title">Text and links</h3>
+<p data-i18n="configure.text.body">Adjust the wording and browser download targets for your visitors.</p>
+</article>
+<article>
+<span aria-hidden="true">✓</span>
+<h3 data-i18n="configure.admin.title">Native admin screen</h3>
+<p data-i18n="configure.admin.body">Use a focused WordPress settings page, not a separate dashboard.</p>
+</article>
+<article>
+<span aria-hidden="true">REM</span>
+<h3 data-i18n="configure.reminder.title">Reminder rhythm</h3>
+<p data-i18n="configure.reminder.body">Choose how soon the notice can reappear after a visitor has seen it.</p>
+</article>
+<article>
+<span aria-hidden="true">ALL</span>
+<h3 data-i18n="configure.coverage.title">Audience coverage</h3>
+<p data-i18n="configure.coverage.body">Decide how the notice handles mobile, insecure or unsupported browsers.</p>
+</article>
+</div>
+</section>
+<section class="download shell" id="links" aria-labelledby="links-title">
+<div>
+<h2 id="links-title" data-i18n="links.title">Install the plugin. Keep the source visible.</h2>
+<p data-i18n="links.lead">Use WordPress.org for normal installation and updates. Use GitHub for release notes, source review and issue tracking.</p>
+</div>
+<div class="download-actions">
+<a class="button primary" href="https://wordpress.org/plugins/wp-browser-update/" data-i18n="links.wordpress">Open WordPress.org</a>
+<a class="button secondary" href="https://github.com/MacSteini/WP-BrowserUpdate" data-i18n="links.repo">Open GitHub</a>
+</div>
+<p class="upstream-note" data-i18n="links.note">Requires WordPress 6.0 or newer and PHP 7.4 or newer. The browser notice runtime is packaged with the plugin and documented in the assets.</p>
+</section>
+</main>
+<footer class="site-footer">
+<div class="shell footer-inner">
+<div class="footer-brand">
+<img src="./assets/wp-browser-update-icon.png" alt="" aria-hidden="true">
+<p data-i18n="footer.copy">WP BrowserUpdate by MacSteini.</p>
+</div>
+<form class="language-form footer-language">
+<span class="select-shell">
+<select id="language-select" name="language" autocomplete="off" data-i18n-attr="aria-label:language.selectAria" aria-label="Choose language">
+<option value="de-DE">Deutsch</option>
+<option value="en-GB">English UK</option>
+<option value="it-IT">Italiano</option>
+<option value="es-ES">Español</option>
+<option value="fr-FR">Français</option>
+<option value="en-US">English US</option>
+</select>
+</span>
+</form>
+</div>
+</footer>
+</body>
+</html>
