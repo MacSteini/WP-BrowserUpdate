@@ -1,0 +1,106 @@
+name: Update WordPress.org Readme Metadata
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Set to true to simulate the SVN readme update"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      stable_tag:
+        description: "Existing WordPress.org stable tag directory to update"
+        required: true
+        default: "6.0.0"
+        type: string
+      confirm_update:
+        description: "Type CONFIRM_README_METADATA to allow this update"
+        required: true
+        type: string
+
+jobs:
+  update-readme:
+    name: Update WordPress.org readme metadata
+    runs-on: ubuntu-latest
+    concurrency:
+      group: wordpress-svn-readme-metadata
+      cancel-in-progress: false
+
+    steps:
+      - name: Validate request
+        run: |
+          if [ "${{ github.event.inputs.confirm_update }}" != "CONFIRM_README_METADATA" ]; then
+            echo "Invalid confirmation phrase. Aborting readme metadata update."
+            exit 1
+          fi
+          if [ "${{ github.event.inputs.dry_run }}" != "true" ] && [ "${{ github.event.inputs.dry_run }}" != "false" ]; then
+            echo "Invalid dry_run value. Use true or false."
+            exit 1
+          fi
+          if ! printf '%s' "${{ github.event.inputs.stable_tag }}" | grep -Eq '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+            echo "Stable tag must be X.Y or X.Y.Z."
+            exit 1
+          fi
+          echo "DRY_RUN=${{ github.event.inputs.dry_run }}" >> "$GITHUB_ENV"
+          echo "STABLE_TAG=${{ github.event.inputs.stable_tag }}" >> "$GITHUB_ENV"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Validate repository readmes
+        run: |
+          test -f "wp-browser-update/trunk/readme.txt"
+          test -f "wp-browser-update/tags/$STABLE_TAG/readme.txt"
+          trunk_stable_tag=$(awk -F': *' '/^Stable tag:/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' wp-browser-update/trunk/readme.txt)
+          tag_stable_tag=$(awk -F': *' '/^Stable tag:/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' "wp-browser-update/tags/$STABLE_TAG/readme.txt")
+          if [ "$trunk_stable_tag" != "$STABLE_TAG" ] || [ "$tag_stable_tag" != "$STABLE_TAG" ]; then
+            echo "Stable tag mismatch. trunk=$trunk_stable_tag tag=$tag_stable_tag expected=$STABLE_TAG"
+            exit 1
+          fi
+
+      - name: Checkout WordPress SVN
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          svn checkout https://plugins.svn.wordpress.org/wp-browser-update svn-wordpress --username="$SVN_USERNAME" --password="$SVN_PASSWORD" --non-interactive
+
+      - name: Copy readme files
+        run: |
+          test -d "svn-wordpress/tags/$STABLE_TAG"
+          cp wp-browser-update/trunk/readme.txt svn-wordpress/trunk/readme.txt
+          cp "wp-browser-update/tags/$STABLE_TAG/readme.txt" "svn-wordpress/tags/$STABLE_TAG/readme.txt"
+
+      - name: Verify SVN scope
+        run: |
+          cd svn-wordpress
+          svn status
+          unexpected=$(svn status | awk '$2 != "trunk/readme.txt" && $2 != "tags/'"$STABLE_TAG"'/readme.txt" {print}')
+          if [ -n "$unexpected" ]; then
+            echo "Unexpected SVN changes:"
+            printf '%s\n' "$unexpected"
+            exit 1
+          fi
+
+      - name: Commit readme metadata update
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          cd svn-wordpress
+          if ! svn status | grep -q '^M'; then
+            echo "No readme metadata changes to commit."
+            exit 0
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run enabled. Skipping SVN commit."
+            svn diff trunk/readme.txt "tags/$STABLE_TAG/readme.txt"
+            exit 0
+          fi
+          svn commit -m "Mark WP BrowserUpdate $STABLE_TAG as tested up to WordPress 7.0" --username="$SVN_USERNAME" --password="$SVN_PASSWORD" --non-interactive
