@@ -1,8 +1,8 @@
 === WP BrowserUpdate ===
 Contributors: MacSteini
 Tags: Browser, Update, Notice, Outdated, Warning
-Tested up to: 6.9
-Compatible up to: 6.9
+Tested up to: 7.0
+Compatible up to: 7.0
 Requires at least: 6.0
 Requires PHP: 7.4
 Stable tag: 6.0.0
