@@ -1,7 +1,7 @@
 // WPBU CSP adapter for Browser-Update.org update.test.js.
 // Upstream: https://browser-update.org/update.test.js
 // Upstream SHA-256 on 2026-05-03: ba2f98ae94db0ecadf3f7d9b748d4414707f8a2b1a33ad618616ec9a9b5f47d1
-// Original licence: MIT Style License <browser-update.org/LICENSE.txt>
+// Original license: MIT Style License <browser-update.org/LICENSE.txt>
 // Changes: moves generated styles to update.show.wpbu.css and uses classes for CSP compatibility.
 // This script is loaded when the bar is shown in testing mode.
 // Shows debug information and a note that the browser may actually not be outdated.

@@ -74,6 +74,10 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 1. Once the installation is complete, click **Activate Plugin** to enable it.
 
 ## Changelog
+### 6.0.1
+- Fixed:
+    - Corrects the original plugin source strings to en-US so WordPress.org translations can provide locale-specific variants such as en-GB.
+
 ### 6.0.0
 - Breaking:
     - Requires WordPress 6.0 or newer.
