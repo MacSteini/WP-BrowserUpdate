@@ -2,8 +2,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?label=Release&color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v6.0-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v6.9.1-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v6.9.1-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.0-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.0-blue)
 [![Licence: GPL3](https://img.shields.io/badge/Licence-GPL3-green)](https://gnu.org/licenses/gpl)
 
 This plugin notifies website visitors to update their outdated browser in a non-intrusive way.
