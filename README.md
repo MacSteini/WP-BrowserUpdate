@@ -4,7 +4,7 @@
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v6.0-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.0-blue)
 ![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.0-blue)
-[![Licence: GPL3](https://img.shields.io/badge/Licence-GPL3-green)](https://gnu.org/licenses/gpl)
+[![License: GPL3](https://img.shields.io/badge/License-GPL3-green)](https://gnu.org/licenses/gpl)
 
 This plugin notifies website visitors to update their outdated browser in a non-intrusive way.
 
@@ -20,7 +20,7 @@ Want to help translate this plugin? Visit the [WordPress Translation Project](ht
 ## How It Works
 WP BrowserUpdate bundles browser-update.org detection logic for WordPress. After activation, the plugin loads the local notification runtime from the plugin directory and passes your configured browser-version thresholds to those scripts. The notification is shown only when the bundled detection logic matches a browser to your settings.
 
-The settings page is available under **Settings > WP BrowserUpdate**. You can define browser versions for every browser key supported by the bundled browser-update.org runtime, choose where the message appears and which element should contain it, enable testing mode, decide whether mobile or unsupported browsers should be notified, customise links, language and message text, and add trusted custom CSS for the notification.
+The settings page is available under **Settings > WP BrowserUpdate**. You can define browser versions for every browser key supported by the bundled browser-update.org runtime, choose where the message appears and which element should contain it, enable testing mode, decide whether mobile or unsupported browsers should be notified, customize links, language and message text, and add trusted custom CSS for the notification.
 
 Browser version fields accept major versions such as `115` and positive dotted versions such as `137.0.3912.63`. Dotted versions are passed exactly to the bundled runtime instead of being reduced to their major version. A value of `0` uses the default bundled outdated-browser detection. Negative whole numbers are passed to the bundled runtime as relative offsets from the current version checked by the plugin.
 
@@ -29,7 +29,7 @@ Microsoft Edge and Microsoft Internet Explorer have separate settings. The plugi
 ## Important Notice
 > **Breaking Changes in Version 6.0.0**
 - Version 6.0.0 requires **WordPress 6.0** or newer.
-- Version 6.0.0 introduces a new structured settings model to support the browser-update.org customisation surface used by WP BrowserUpdate.
+- Version 6.0.0 introduces a new structured settings model to support the browser-update.org customization surface used by WP BrowserUpdate.
 - Version 6.0.0 also moves the visitor-facing browser-update.org runtime into the plugin package so strict Content Security Policies and tracker blockers no longer need to allow scripts from `browser-update.org`.
 - Existing WP BrowserUpdate settings from version 5.x are migrated automatically.
 
@@ -82,10 +82,10 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     - Removes the old normal-render-path conversion of negative browser versions; values are now passed predictably to the bundled runtime.
     - Removes developer callback settings from the admin UI and saved settings model.
 - Added:
-    - Adds interface coverage for the browser-update.org customisation options used by WP BrowserUpdate: all runtime browser keys, `reminderClosed`, `notify_esr`, `noclose`, `no_permanent_hide`, `container`, `url`, `url_permanent_hide`, `burl`, fixed language, and text overrides.
+    - Adds interface coverage for the browser-update.org customization options used by WP BrowserUpdate: all runtime browser keys, `reminderClosed`, `notify_esr`, `noclose`, `no_permanent_hide`, `container`, `url`, `url_permanent_hide`, `burl`, fixed language, and text overrides.
 - Changed:
     - Takes the long-postponed step of making the browser-update.org integration CSP-compatible by shipping the complete runtime with the plugin, so sites on shared hosting or strict Content Security Policies no longer need to allow scripts from `browser-update.org`.
-    - Adds the required browser-update.org runtime/adaptor asset files intentionally, with upstream source URLs and hashes documented for attribution and review.
+    - Adds the required browser-update.org runtime/adapter asset files intentionally, with upstream source URLs and hashes documented for attribution and review.
     - Loads bundled browser-update.org runtime files from the plugin directory through the WordPress script queue.
     - Removes browser-update.org runtime requests from the frontend by loading only same-origin plugin assets.
     - Uses WP BrowserUpdate CSP adapter files for the notification and test-mode scripts so the runtime can avoid generated inline styles.
@@ -93,10 +93,10 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
     - Uses the WordPress HTTP API with a host allowlist for remote browser-version checks.
     - Uses the WordPress Settings API for the admin settings page.
     - Splits admin settings handling into smaller validation, migration and rendering steps.
-    - Documents the bundled browser-update.org runtime, local frontend loading, and expected visitor-facing behaviour.
+    - Documents the bundled browser-update.org runtime, local frontend loading, and expected visitor-facing behavior.
     - Passes dotted browser versions such as `137.0.3912.63` to the bundled runtime without reducing them to major versions.
     - Adds separate Microsoft Edge and Microsoft Internet Explorer thresholds.
-    - Ships only the loaded runtime/adaptor files in the release package; upstream reference copies are documented by URL and hash rather than duplicated in the plugin ZIP.
+    - Ships only the loaded runtime/adapter files in the release package; upstream reference copies are documented by URL and hash rather than duplicated in the plugin ZIP.
 - Security:
     - Adds stricter settings validation before saving options.
     - Sanitizes custom CSS before saving and before frontend output.
@@ -179,7 +179,7 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 - Minor fixes.
 
 ### 2.2.0
-- Changed licence to GPLv3.
+- Changed license to GPLv3.
 - Added text domain to header.
 - Added POT file for easier translations.
 

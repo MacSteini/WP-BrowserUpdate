@@ -380,7 +380,7 @@ foreach (wpbu_additional_browser_keys() as $key) {
 $browser = wpbu_browser_configs()[$key];
 add_settings_field('wpbu_required_'.$key, wpbu_browser_settings_title($browser), 'wpbu_render_browser_version_field', 'wp-browserupdate', 'wpbu_additional_browser_versions', array('key' => $key));
 }
-add_settings_section('wpbu_behaviour', __('Notification Behaviour', 'wp-browser-update'), 'wpbu_render_behaviour_section', 'wp-browserupdate');
+add_settings_section('wpbu_behaviour', __('Notification Behavior', 'wp-browser-update'), 'wpbu_render_behaviour_section', 'wp-browserupdate');
 foreach (wpbu_behaviour_field_configs() as $key => $field) {
 add_settings_field('wpbu_behaviour_'.$key, $field['label'], 'wpbu_render_behaviour_field', 'wp-browserupdate', 'wpbu_behaviour', array('key' => $key, 'label_for' => 'wpbu_behaviour_'.$key));
 }
@@ -449,7 +449,7 @@ echo '</p>';
 }
 
 function wpbu_render_behaviour_section() {
-echo '<p>'.esc_html__('These fields map to the documented bundled-runtime behaviour options.', 'wp-browser-update').'</p>';
+echo '<p>'.esc_html__('These fields map to the documented bundled-runtime behavior options.', 'wp-browser-update').'</p>';
 }
 
 function wpbu_behaviour_field_configs() {

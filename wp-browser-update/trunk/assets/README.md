@@ -2,7 +2,7 @@
 
 WP BrowserUpdate bundles the browser-update.org runtime logic so sites with restrictive Content Security Policies can load the notification from their own WordPress origin.
 
-browser-update.org remains the upstream source for browser detection and notification behaviour. The shipped files are local WP BrowserUpdate runtime/adapters with provenance documented here. Reference copies of upstream files are not packaged; use the URLs and hashes below when comparing or refreshing the bundled runtime.
+browser-update.org remains the upstream source for browser detection and notification behavior. The shipped files are local WP BrowserUpdate runtime/adapters with provenance documented here. Reference copies of upstream files are not packaged; use the URLs and hashes below when comparing or refreshing the bundled runtime.
 
 ## Upstream files
 
@@ -14,7 +14,7 @@ Upstream file|Upstream URL|SHA-256 of retrieved upstream file|Shipped file
 `update.show.min.js`|`https://browser-update.org/update.show.min.js`|`9976811f7fd2ad3a89cc3f3450f9655938c39f3869de8000e50030e10a502747`|`update.show.wpbu.min.js`
 `update.test.js`|`https://browser-update.org/update.test.js`|`ba2f98ae94db0ecadf3f7d9b748d4414707f8a2b1a33ad618616ec9a9b5f47d1`|`update.test.wpbu.js`
 
-## Licence and attribution
+## License and attribution
 
 The upstream browser-update.org files include this notice:
 
