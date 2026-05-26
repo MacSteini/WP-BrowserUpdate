@@ -5,19 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WP BrowserUpdate for WordPress</title>
 <meta name="description" content="WP BrowserUpdate helps WordPress sites show clear update notices to visitors using outdated browsers.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#f5f7fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171c22" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="WP BrowserUpdate for WordPress">
 <meta property="og:description" content="A focused WordPress plugin for browser update notices, local runtime files and practical settings.">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="WP BrowserUpdate">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://macsteini.github.io/WP-BrowserUpdate/">
 <meta property="og:image" content="https://macsteini.github.io/WP-BrowserUpdate/assets/wp-browser-update-banner-1544x500.png">
+<meta property="og:image:width" content="1544">
+<meta property="og:image:height" content="500">
+<meta property="og:image:alt" content="WP BrowserUpdate banner">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="WP BrowserUpdate for WordPress">
 <meta name="twitter:description" content="A focused WordPress plugin for browser update notices, local runtime files and practical settings.">
 <meta name="twitter:image" content="https://macsteini.github.io/WP-BrowserUpdate/assets/wp-browser-update-banner-1544x500.png">
+<meta name="twitter:image:alt" content="WP BrowserUpdate banner">
 <link rel="canonical" href="https://macsteini.github.io/WP-BrowserUpdate/">
 <link rel="icon" href="./assets/wp-browser-update-icon.png" type="image/png">
 <link rel="stylesheet" href="./css.css">
 <script src="./js.js" defer></script>
+<script type="application/ld+json" id="wpbu-structured-data">
+{
+"@context": "https://schema.org",
+"@type": "SoftwareApplication",
+"name": "WP BrowserUpdate",
+"applicationCategory": "WordPress plugin",
+"operatingSystem": "WordPress",
+"url": "https://macsteini.github.io/WP-BrowserUpdate/",
+"downloadUrl": "https://wordpress.org/plugins/wp-browser-update/",
+"codeRepository": "https://github.com/macsteini/wp-browserupdate/",
+"description": "WP BrowserUpdate helps WordPress sites show clear update notices to visitors using outdated browsers."
+}
+</script>
 </head>
 <body>
 <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
@@ -29,24 +51,23 @@
 <svg class="theme-icon-light" viewBox="0 0 24 24"><path d="M12 5.25a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5Zm0-3.25 1.15 2.45h-2.3L12 2Zm0 20-1.15-2.45h2.3L12 22ZM2 12l2.45-1.15v2.3L2 12Zm20 0-2.45 1.15v-2.3L22 12ZM4.22 4.22l2.55.92-1.63 1.63-.92-2.55Zm15.56 15.56-2.55-.92 1.63-1.63.92 2.55Zm0-15.56-.92 2.55-1.63-1.63 2.55-.92ZM4.22 19.78l.92-2.55 1.63 1.63-2.55.92Z"></path></svg>
 <svg class="theme-icon-dark" viewBox="0 0 24 24"><path d="M20.4 15.1A8.3 8.3 0 0 1 8.9 3.6 8.8 8.8 0 1 0 20.4 15.1Z"></path></svg>
 </span>
-<span class="theme-label" data-theme-label>Auto</span>
 </button>
-<nav class="language-switch" data-language-switch data-i18n-attr="aria-label:language.navAria" aria-label="Choose language">
-<button type="button" data-locale="de-DE" aria-label="Deutsch">🇩🇪</button>
-<button type="button" data-locale="en-GB" aria-label="British English">🇬🇧</button>
-<button type="button" data-locale="it-IT" aria-label="Italiano">🇮🇹</button>
-<button type="button" data-locale="es-ES" aria-label="Español">🇪🇸</button>
-<button type="button" data-locale="fr-FR" aria-label="Français">🇫🇷</button>
-<button type="button" data-locale="en-US" aria-label="American English">🇺🇸</button>
-</nav>
+<div class="language-switch" data-language-switch data-i18n-attr="aria-label:language.navAria" role="group" aria-label="Choose language">
+<button type="button" data-locale="de-DE" lang="de-DE" aria-label="Deutsch" aria-pressed="false" title="Deutsch"><span aria-hidden="true">DE</span></button>
+<button type="button" data-locale="en-GB" lang="en-GB" aria-label="British English" aria-pressed="false" title="British English"><span aria-hidden="true">GB</span></button>
+<button type="button" data-locale="it-IT" lang="it-IT" aria-label="Italiano" aria-pressed="false" title="Italiano"><span aria-hidden="true">IT</span></button>
+<button type="button" data-locale="es-ES" lang="es-ES" aria-label="Español" aria-pressed="false" title="Español"><span aria-hidden="true">ES</span></button>
+<button type="button" data-locale="fr-FR" lang="fr-FR" aria-label="Français" aria-pressed="false" title="Français"><span aria-hidden="true">FR</span></button>
+<button type="button" data-locale="en-US" lang="en-US" aria-label="American English" aria-pressed="true" title="American English"><span aria-hidden="true">US</span></button>
+</div>
 </div>
 </header>
 <main id="main-content">
 <section class="hero shell" aria-labelledby="hero-title">
 <div class="hero-copy">
-<h1 id="hero-title" data-i18n="hero.title">A clear browser update notice for WordPress visitors.</h1>
-<p class="lead" data-i18n="hero.lead">WP BrowserUpdate helps a WordPress site warn people when their browser is too old for the experience you want to support.</p>
-<p class="hero-support" data-i18n="hero.support">You decide where the line is. The plugin handles the notice, the wording and the visitor-facing files from your own site.</p>
+<h1 id="hero-title" data-i18n="hero.title">WP BrowserUpdate shows clear browser notices.</h1>
+<p class="lead" data-i18n="hero.lead">WP BrowserUpdate helps WordPress sites warn people when a browser is too old for the intended site experience.</p>
+<p class="hero-support" data-i18n="hero.support">Site owners define the support threshold. The plugin handles the notice, the wording and the visitor-facing files from the WordPress site.</p>
 </div>
 <aside class="notice-preview" aria-labelledby="preview-title">
 <div class="preview-window">
@@ -56,35 +77,35 @@
 </div>
 <h2 id="preview-title" data-i18n="preview.title">Your browser is out of date.</h2>
 <p data-i18n="preview.body">Please update your browser to use this website safely and comfortably.</p>
-<p class="preview-action" data-i18n="preview.action">Update browser</p>
+<span class="preview-action" data-i18n="preview.action">Update browser</span>
 </aside>
 </section>
 <section class="section shell story-section" aria-labelledby="story-title">
 <div class="section-head">
 <h2 id="story-title" data-i18n="story.title">Start with the visitor, not the browser list.</h2>
-<p data-i18n="story.lead">The plugin is meant for a simple situation: someone opens your site with an outdated browser, and you want to give them a useful next step without breaking the page for everyone else.</p>
+<p data-i18n="story.lead">The plugin covers a simple situation: someone opens a site with an outdated browser, and the site can offer a useful next step without disturbing everyone else.</p>
 </div>
 <div class="flow-list">
 <article>
 <span class="flow-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M5 5h14v10H5V5Zm2 2v6h10V7H7Zm4 10h2v2h4v2H7v-2h4v-2Z"></path></svg>
 </span>
-<h3 data-i18n="story.detect.title">Detect the gap</h3>
-<p data-i18n="story.detect.body">Set the browser versions you still support, including exact dotted versions when you need that level of control.</p>
+<h3 data-i18n="story.detect.title">Check browser support</h3>
+<p data-i18n="story.detect.body">Supported browser versions can be defined with defaults, major versions or exact dotted versions when that level of control is needed.</p>
 </article>
 <article>
 <span class="flow-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M4 5.5 12 3l8 2.5v7.1c0 4.7-3.2 7.5-8 8.9-4.8-1.4-8-4.2-8-8.9V5.5Zm8 1.1-5 1.5v4.5c0 3.3 1.9 5.4 5 6.5 3.1-1.1 5-3.2 5-6.5V8.1l-5-1.5Z"></path></svg>
 </span>
 <h3 data-i18n="story.explain.title">Explain the issue</h3>
-<p data-i18n="story.explain.body">Show a short notice with your text and your browser download targets, instead of leaving visitors to guess.</p>
+<p data-i18n="story.explain.body">A short notice can use site-specific text and browser download targets, so visitors are not left to guess.</p>
 </article>
 <article>
 <span class="flow-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M6 4h12v16H6V4Zm2 2v12h8V6H8Zm2 2h4v2h-4V8Zm0 4h4v2h-4v-2Z"></path></svg>
 </span>
 <h3 data-i18n="story.stay.title">Stay in WordPress</h3>
-<p data-i18n="story.stay.body">Configure the notice from a normal settings screen and test it before showing it to real traffic.</p>
+<p data-i18n="story.stay.body">The notice is configured from a normal settings screen and can be tested before it appears for real traffic.</p>
 </article>
 </div>
 </section>
@@ -102,7 +123,7 @@
 <section class="section shell" aria-labelledby="configure-title">
 <div class="section-head">
 <h2 id="configure-title" data-i18n="configure.title">Control the notice without turning it into a project.</h2>
-<p data-i18n="configure.lead">Most sites can keep the defaults. When you need more precision, the settings stay focused on decisions a site owner can understand.</p>
+<p data-i18n="configure.lead">Most sites can keep the defaults. When more precision is needed, the settings stay focused on decisions a site owner can understand.</p>
 </div>
 <div class="feature-grid">
 <article>
@@ -110,42 +131,42 @@
 <svg viewBox="0 0 24 24"><path d="M4 17h16v2H4v-2Zm1-5h14v2H5v-2Zm2-5h10v2H7V7Z"></path></svg>
 </span>
 <h3 data-i18n="configure.thresholds.title">Browser thresholds</h3>
-<p data-i18n="configure.thresholds.body">Use defaults, major versions, negative offsets or exact dotted versions such as 137.0.3912.63.</p>
+<p data-i18n="configure.thresholds.body">Defaults, major versions, negative offsets and exact dotted versions such as 137.0.3912.63 are supported.</p>
 </article>
 <article>
 <span class="feature-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M5 5h6v6H5V5Zm8 0h6v6h-6V5ZM5 13h6v6H5v-6Zm8 0h6v6h-6v-6Z"></path></svg>
 </span>
 <h3 data-i18n="configure.targets.title">Separate targets</h3>
-<p data-i18n="configure.targets.body">Handle modern Edge, legacy Internet Explorer and additional browser targets separately.</p>
+<p data-i18n="configure.targets.body">Modern Edge, legacy Internet Explorer and additional browser targets can be handled separately.</p>
 </article>
 <article>
 <span class="feature-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 1 9 9h-2a7 7 0 1 0-7 7v2a9 9 0 0 1 0-18Zm1 5v5l4 2-.9 1.8L11 14V8h2Z"></path></svg>
 </span>
 <h3 data-i18n="configure.reminders.title">Reminder rhythm</h3>
-<p data-i18n="configure.reminders.body">Choose how soon a dismissed notice may reappear for the same visitor.</p>
+<p data-i18n="configure.reminders.body">The reappearance delay controls when a dismissed notice may return for the same visitor.</p>
 </article>
 <article>
 <span class="feature-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M4 4h16v4H4V4Zm0 6h7v10H4V10Zm9 0h7v10h-7V10Z"></path></svg>
 </span>
 <h3 data-i18n="configure.appearance.title">Text and appearance</h3>
-<p data-i18n="configure.appearance.body">Adjust wording, links and site-specific CSS without printing raw style blocks into the page.</p>
+<p data-i18n="configure.appearance.body">Wording, links and site-specific CSS can be adjusted without printing raw style blocks into the page.</p>
 </article>
 <article>
 <span class="feature-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M5 4h14v3H5V4Zm0 5h14v11H5V9Zm3 3v2h8v-2H8Zm0 4v2h5v-2H8Z"></path></svg>
 </span>
 <h3 data-i18n="configure.admin.title">Native admin screen</h3>
-<p data-i18n="configure.admin.body">Use one focused WordPress settings page instead of a separate dashboard.</p>
+<p data-i18n="configure.admin.body">Configuration stays in one focused WordPress settings page instead of a separate dashboard.</p>
 </article>
 <article>
 <span class="feature-icon" aria-hidden="true">
 <svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.2 8.4 8 10 4.8-1.6 8-5 8-10V6l-8-4Zm-1 14.2-3.3-3.3 1.4-1.4 1.9 1.9 4.4-4.4 1.4 1.4-5.8 5.8Z"></path></svg>
 </span>
 <h3 data-i18n="configure.testing.title">Safe testing</h3>
-<p data-i18n="configure.testing.body">Force the notice while setting up, then disable test mode before real visitors see the site.</p>
+<p data-i18n="configure.testing.body">Test mode can force the notice during setup and is disabled again before real visitors see the site.</p>
 </article>
 </div>
 </section>

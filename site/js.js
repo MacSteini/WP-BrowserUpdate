@@ -9,8 +9,42 @@ fr: "fr-FR"
 const THEME_MODES = ["auto", "light", "dark"];
 const THEME_STORAGE_KEY = "wpbu-theme";
 const LOCALE_STORAGE_KEY = "wpbu-locale";
-const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+function mediaQuery(query) {
+if (typeof window.matchMedia === "function") {
+return window.matchMedia(query);
+}
+return {
+matches: false
+};
+}
+
+const systemTheme = mediaQuery("(prefers-color-scheme: dark)");
+const reducedMotion = mediaQuery("(prefers-reduced-motion: reduce)");
+
+function storageGet(key) {
+try {
+return localStorage.getItem(key);
+} catch (error) {
+return null;
+}
+}
+
+function storageSet(key, value) {
+try {
+localStorage.setItem(key, value);
+} catch (error) {
+}
+}
+
+function addMediaListener(query, callback) {
+if (typeof query.addEventListener === "function") {
+query.addEventListener("change", callback);
+return;
+}
+if (typeof query.addListener === "function") {
+query.addListener(callback);
+}
+}
 
 const LOCALES = {
 "en-US": {
@@ -32,7 +66,7 @@ ariaLight: "Theme: light",
 ariaDark: "Theme: dark"
 },
 hero: {
-title: "A clear notice when a browser is out of date.",
+title: "WP BrowserUpdate shows clear browser notices.",
 lead: "WP BrowserUpdate helps WordPress sites warn people when a browser is too old for the intended site experience.",
 support: "Site owners define the support threshold. The plugin handles the notice, the wording and the visitor-facing files from the WordPress site."
 },
@@ -125,7 +159,7 @@ ariaLight: "Theme: light",
 ariaDark: "Theme: dark"
 },
 hero: {
-title: "A clear notice when a browser is out of date.",
+title: "WP BrowserUpdate shows clear browser notices.",
 lead: "WP BrowserUpdate helps WordPress sites warn people when a browser is too old for the intended site experience.",
 support: "Site owners define the support threshold. The plugin handles the notice, the wording and the visitor-facing files from the WordPress site."
 },
@@ -218,7 +252,7 @@ ariaLight: "Darstellung: hell",
 ariaDark: "Darstellung: dunkel"
 },
 hero: {
-title: "Ein klarer Hinweis, wenn ein Browser zu alt ist.",
+title: "WP BrowserUpdate zeigt klare Browser-Hinweise.",
 lead: "WP BrowserUpdate hilft WordPress-Websites, Besucher zu informieren, wenn ein Browser zu alt für die gewünschte Nutzung ist.",
 support: "Website-Betreiber legen die Support-Grenze fest. Das Plugin kümmert sich um Hinweis, Texte und sichtbare Dateien von der WordPress-Website."
 },
@@ -311,7 +345,7 @@ ariaLight: "Tema: chiaro",
 ariaDark: "Tema: scuro"
 },
 hero: {
-title: "Un avviso chiaro quando un browser è obsoleto.",
+title: "WP BrowserUpdate mostra avvisi browser chiari.",
 lead: "WP BrowserUpdate aiuta i siti WordPress ad avvisare quando un browser è troppo vecchio per l'esperienza prevista.",
 support: "I gestori del sito definiscono la soglia di supporto. Il plugin gestisce avviso, testi e file visibili ai visitatori dal sito WordPress."
 },
@@ -404,7 +438,7 @@ ariaLight: "Tema: claro",
 ariaDark: "Tema: oscuro"
 },
 hero: {
-title: "Un aviso claro cuando un navegador está obsoleto.",
+title: "WP BrowserUpdate muestra avisos claros del navegador.",
 lead: "WP BrowserUpdate ayuda a los sitios WordPress a avisar cuando un navegador es demasiado antiguo para la experiencia prevista.",
 support: "Los responsables del sitio definen el umbral de compatibilidad. El plugin gestiona el aviso, los textos y los archivos visibles desde el sitio WordPress."
 },
@@ -497,7 +531,7 @@ ariaLight: "Thème : clair",
 ariaDark: "Thème : sombre"
 },
 hero: {
-title: "Un message clair quand un navigateur est trop ancien.",
+title: "WP BrowserUpdate affiche des messages navigateur clairs.",
 lead: "WP BrowserUpdate aide les sites WordPress à prévenir les personnes lorsqu'un navigateur est trop ancien pour l'expérience prévue.",
 support: "Les responsables du site définissent le seuil de prise en charge. Le plugin gère le message, les textes et les fichiers visibles depuis le site WordPress."
 },
@@ -590,7 +624,7 @@ return null;
 }
 
 function initialLocale() {
-const stored = localeFromLanguage(localStorage.getItem(LOCALE_STORAGE_KEY));
+const stored = localeFromLanguage(storageGet(LOCALE_STORAGE_KEY));
 if (stored) {
 return stored;
 }
@@ -611,6 +645,10 @@ return value[key];
 }
 return undefined;
 }, source);
+}
+
+function localeToOpenGraph(locale) {
+return String(locale).replace("-", "_");
 }
 
 function validTheme(mode) {
@@ -636,16 +674,18 @@ const strings = LOCALES[currentLocale()].theme;
 root.dataset.theme = selectedMode;
 root.dataset.resolvedTheme = resolvedMode;
 if (persist) {
-localStorage.setItem(THEME_STORAGE_KEY, selectedMode);
+storageSet(THEME_STORAGE_KEY, selectedMode);
 }
 const button = document.querySelector("[data-theme-toggle]");
 const label = document.querySelector("[data-theme-label]");
-if (!button || !label) {
+if (!button) {
 return;
 }
 const labelKey = `label${selectedMode.charAt(0).toUpperCase()}${selectedMode.slice(1)}`;
 const ariaKey = `aria${selectedMode.charAt(0).toUpperCase()}${selectedMode.slice(1)}`;
+if (label) {
 label.textContent = strings[labelKey];
+}
 button.setAttribute("aria-label", strings[ariaKey]);
 }
 
@@ -666,6 +706,10 @@ ogTitle.setAttribute("content", strings.meta.title);
 const ogDescription = document.querySelector('meta[property="og:description"]');
 if (ogDescription) {
 ogDescription.setAttribute("content", strings.meta.ogDescription);
+}
+const ogLocale = document.querySelector('meta[property="og:locale"]');
+if (ogLocale) {
+ogLocale.setAttribute("content", localeToOpenGraph(selectedLocale));
 }
 const twitterTitle = document.querySelector('meta[name="twitter:title"]');
 if (twitterTitle) {
@@ -690,18 +734,18 @@ element.setAttribute(attribute, value);
 }
 });
 });
-document.querySelectorAll("[data-locale]").forEach((button) => {
+document.querySelectorAll("[data-language-switch] [data-locale]").forEach((button) => {
 const active = button.dataset.locale === selectedLocale;
 button.setAttribute("aria-pressed", active ? "true" : "false");
 });
-applyTheme(validTheme(localStorage.getItem(THEME_STORAGE_KEY)), false);
+applyTheme(validTheme(storageGet(THEME_STORAGE_KEY)), false);
 }
 
 function setupLanguageButtons() {
-document.querySelectorAll("[data-locale]").forEach((button) => {
+document.querySelectorAll("[data-language-switch] [data-locale]").forEach((button) => {
 button.addEventListener("click", () => {
 const locale = localeFromLanguage(button.dataset.locale) || "en-US";
-localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+storageSet(LOCALE_STORAGE_KEY, locale);
 applyLocale(locale);
 });
 });
@@ -717,7 +761,7 @@ const current = validTheme(document.documentElement.dataset.theme);
 const nextIndex = (THEME_MODES.indexOf(current) + 1) % THEME_MODES.length;
 applyTheme(THEME_MODES[nextIndex]);
 });
-systemTheme.addEventListener("change", () => {
+addMediaListener(systemTheme, () => {
 if (validTheme(document.documentElement.dataset.theme) === "auto") {
 applyTheme("auto", false);
 }
@@ -736,7 +780,10 @@ return;
 }
 event.preventDefault();
 target.scrollIntoView({ behavior: "smooth", block: "start" });
+try {
 history.replaceState(null, "", `${location.pathname}${location.search}`);
+} catch (error) {
+}
 });
 }
 
@@ -744,4 +791,4 @@ setupLanguageButtons();
 setupThemeButton();
 setupSmoothScrollTop();
 applyLocale(initialLocale());
-applyTheme(validTheme(localStorage.getItem(THEME_STORAGE_KEY)), false);
+applyTheme(validTheme(storageGet(THEME_STORAGE_KEY)), false);

@@ -7,7 +7,7 @@ color-scheme: light dark;
 --radius-lg: 1.45rem;
 --bg: #f5f7fa;
 --bg-soft: #eceff4;
---surface: #ffffff;
+--surface: #fff;
 --surface-raised: #f9fbfd;
 --ink: #17202c;
 --muted: #5e6a78;
@@ -41,6 +41,26 @@ font-size: 100%;
 --shadow-soft: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.18);
 }
 
+@media (prefers-color-scheme: dark) {
+:root[data-theme="auto"] {
+--bg: #171c22;
+--bg-soft: #20262e;
+--surface: #242b34;
+--surface-raised: #2a323c;
+--ink: #edf2f7;
+--muted: #b8c3cf;
+--quiet: #94a1af;
+--line: #3c4652;
+--line-strong: #566371;
+--accent: #8fb7d6;
+--accent-strong: #c5dceb;
+--accent-soft: #2f4252;
+--focus: #b9d4e8;
+--shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.24);
+--shadow-soft: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.18);
+}
+}
+
 *, *::before, *::after {
 box-sizing: border-box;
 }
@@ -62,6 +82,12 @@ font-family: var(--font-main);
 line-height: 1.56;
 text-rendering: optimizeLegibility;
 -webkit-font-smoothing: antialiased;
+}
+
+@supports not (overflow: clip) {
+body {
+overflow-x: hidden;
+}
 }
 
 body[data-locale^="de"], body[data-locale^="fr"], body[data-locale^="it"], body[data-locale^="es"] {
@@ -162,11 +188,11 @@ transform: translateY(-0.06rem);
 display: inline-flex;
 align-items: center;
 justify-content: center;
-gap: 0.45rem;
 min-height: 2.65rem;
-min-width: 6.6rem;
+width: 2.65rem;
+height: 2.65rem;
 border-radius: 999rem;
-padding-inline: 0.85rem 1rem;
+padding: 0;
 font-weight: 800;
 font-size: 0.92rem;
 }
@@ -206,7 +232,8 @@ width: 2.65rem;
 height: 2.65rem;
 border-radius: 999rem;
 padding: 0;
-font-size: 1.18rem;
+font-size: 0.78rem;
+font-weight: 850;
 line-height: 1;
 }
 
@@ -527,8 +554,8 @@ gap: 0.45rem;
 }
 
 .theme-toggle {
-min-width: 5.7rem;
-padding-inline: 0.65rem 0.75rem;
+width: 2.65rem;
+height: 2.65rem;
 }
 
 .language-switch {
@@ -539,7 +566,7 @@ gap: 0.22rem;
 .language-switch button {
 width: 2.25rem;
 height: 2.25rem;
-font-size: 1.02rem;
+font-size: 0.72rem;
 }
 
 .hero {
@@ -561,6 +588,14 @@ text-align: center;
 .footer-nav a {
 justify-self: auto;
 width: auto;
+}
+}
+
+@media (max-width: 24rem) {
+.language-switch button {
+width: 2.05rem;
+height: 2.05rem;
+font-size: 0.66rem;
 }
 }
 
