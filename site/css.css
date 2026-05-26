@@ -232,8 +232,7 @@ width: 2.65rem;
 height: 2.65rem;
 border-radius: 999rem;
 padding: 0;
-font-size: 0.78rem;
-font-weight: 850;
+font-size: 1.18rem;
 line-height: 1;
 }
 
@@ -566,7 +565,7 @@ gap: 0.22rem;
 .language-switch button {
 width: 2.25rem;
 height: 2.25rem;
-font-size: 0.72rem;
+font-size: 1.02rem;
 }
 
 .hero {
@@ -595,7 +594,7 @@ width: auto;
 .language-switch button {
 width: 2.05rem;
 height: 2.05rem;
-font-size: 0.66rem;
+font-size: 0.95rem;
 }
 }
 
