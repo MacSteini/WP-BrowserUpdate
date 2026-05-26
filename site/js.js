@@ -6,616 +6,742 @@ it: "it-IT",
 es: "es-ES",
 fr: "fr-FR"
 };
+const THEME_MODES = ["auto", "light", "dark"];
+const THEME_STORAGE_KEY = "wpbu-theme";
+const LOCALE_STORAGE_KEY = "wpbu-locale";
+const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
 const LOCALES = {
 "en-US": {
 meta: {
 title: "WP BrowserUpdate for WordPress",
-description: "WP BrowserUpdate shows controlled browser update notices in WordPress and keeps visitor-facing runtime assets on your site.",
-ogDescription: "Controlled browser update notices for WordPress with local runtime assets and clear settings."
+description: "WP BrowserUpdate helps WordPress sites show clear update notices to visitors using outdated browsers.",
+ogDescription: "A focused WordPress plugin for browser update notices, local runtime files and practical settings."
 },
 skip: "Skip to content",
 language: {
-selectAria: "Choose language"
+navAria: "Choose language"
 },
-actions: {
-download: "Installation",
-release: "Latest Release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Light",
+labelDark: "Dark",
+ariaAuto: "Theme: automatic",
+ariaLight: "Theme: light",
+ariaDark: "Theme: dark"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Tell visitors when their browser is too old.",
-lead: "WP BrowserUpdate adds a clear browser update notice to WordPress. You set the browser limits, the text and the links; the plugin keeps the visitor-facing files on your own site."
+title: "A clear notice when a browser is out of date.",
+lead: "WP BrowserUpdate helps WordPress sites warn people when a browser is too old for the intended site experience.",
+support: "Site owners define the support threshold. The plugin handles the notice, the wording and the visitor-facing files from the WordPress site."
 },
-visitors: {
-title: "What visitors see",
-lead: "A short, direct notice appears only when a visitor uses a browser below your configured threshold.",
-notice: {
-title: "A clear update prompt",
-body: "The notice explains that the browser is outdated and points people to a current browser download."
+preview: {
+title: "Your browser is out of date.",
+body: "Please update your browser to use this website safely and comfortably.",
+action: "Update browser"
 },
-timing: {
-title: "Only when needed",
-body: "Modern browsers stay out of the flow. Older browsers get the nudge you chose."
+story: {
+title: "Start with the visitor, not the browser list.",
+lead: "The plugin covers a simple situation: someone opens a site with an outdated browser, and the site can offer a useful next step without disturbing everyone else.",
+detect: {
+title: "Check browser support",
+body: "Supported browser versions can be defined with defaults, major versions or exact dotted versions when that level of control is needed."
 },
-page: {
-title: "No third-party runtime request",
-body: "The public page loads the packaged runtime from your WordPress installation."
+explain: {
+title: "Explain the issue",
+body: "A short notice can use site-specific text and browser download targets, so visitors are not left to guess."
+},
+stay: {
+title: "Stay in WordPress",
+body: "The notice is configured from a normal settings screen and can be tested before it appears for real traffic."
 }
 },
-local: {
-title: "Built for stricter sites",
-lead: "Many sites use CSPs, privacy tools or tracker blocking. WP BrowserUpdate avoids a common failure point by serving the notification assets from the same site as the page.",
-sameOrigin: "Same-origin scripts and styles for the browser notice.",
-control: "Configuration stays in the WordPress admin area.",
-upstream: "browser-update.org remains credited as the upstream notification project."
+runtime: {
+title: "Built to avoid avoidable frontend surprises.",
+lead: "The browser notice runtime is bundled with the plugin, so the public page does not need to fetch the notice scripts or styles from browser-update.org.",
+sameOrigin: "Visitor-facing runtime files load from the WordPress site.",
+csp: "This is friendlier to strict Content Security Policies and tracker blockers.",
+credit: "browser-update.org remains the credited upstream project for the notification runtime."
 },
 configure: {
-title: "Control the notice",
-lead: "Keep the default setup simple, or tune the details when your audience needs stricter browser guidance.",
-versions: {
+title: "Control the notice without turning it into a project.",
+lead: "Most sites can keep the defaults. When more precision is needed, the settings stay focused on decisions a site owner can understand.",
+thresholds: {
 title: "Browser thresholds",
-body: "Set defaults, major versions, negative offsets or exact dotted versions such as 137.0.3912.63."
+body: "Defaults, major versions, negative offsets and exact dotted versions such as 137.0.3912.63 are supported."
 },
-edge: {
-title: "Edge and Internet Explorer",
-body: "Treat modern Edge separately from legacy Internet Explorer."
+targets: {
+title: "Separate targets",
+body: "Modern Edge, legacy Internet Explorer and additional browser targets can be handled separately."
 },
-test: {
-title: "Test mode",
-body: "Force the notice while setting up, then turn test mode off for real traffic."
+reminders: {
+title: "Reminder rhythm",
+body: "The reappearance delay controls when a dismissed notice may return for the same visitor."
 },
-style: {
-title: "Styling",
-body: "Add site-specific CSS without printing raw style blocks into the page."
-},
-text: {
-title: "Text and links",
-body: "Adjust the wording and browser download targets for your visitors."
+appearance: {
+title: "Text and appearance",
+body: "Wording, links and site-specific CSS can be adjusted without printing raw style blocks into the page."
 },
 admin: {
 title: "Native admin screen",
-body: "Use a focused WordPress settings page, not a separate dashboard."
+body: "Configuration stays in one focused WordPress settings page instead of a separate dashboard."
 },
-reminder: {
-title: "Reminder rhythm",
-body: "Choose how soon the notice can reappear after a visitor has seen it."
-},
-coverage: {
-title: "Audience coverage",
-body: "Decide how the notice handles mobile, insecure or unsupported browsers."
+testing: {
+title: "Safe testing",
+body: "Test mode can force the notice during setup and is disabled again before real visitors see the site."
 }
 },
 links: {
-title: "Install the plugin. Keep the source visible.",
-lead: "Use WordPress.org for normal installation and updates. Use GitHub for release notes, source review and issue tracking.",
+title: "Install from WordPress.org. Review the source on GitHub.",
+lead: "For normal WordPress installation and updates, use the plugin directory. For source review and issue tracking, use the GitHub repository.",
 wordpress: "Open WordPress.org",
-repo: "Open GitHub",
-note: "Requires WordPress 6.0 or newer and PHP 7.4 or newer. The browser notice runtime is packaged with the plugin and documented in the assets."
+github: "Open GitHub",
+note: "Requires WordPress 6.0 or newer and PHP 7.4 or newer."
 },
 footer: {
-copy: "WP BrowserUpdate by MacSteini."
+navAria: "Footer",
+top: "Back to top",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 },
 "en-GB": {
 meta: {
 title: "WP BrowserUpdate for WordPress",
-description: "WP BrowserUpdate shows controlled browser update notices in WordPress and keeps visitor-facing runtime assets on your site.",
-ogDescription: "Controlled browser update notices for WordPress with local runtime assets and clear settings."
+description: "WP BrowserUpdate helps WordPress sites show clear update notices to visitors using outdated browsers.",
+ogDescription: "A focused WordPress plugin for browser update notices, local runtime files and practical settings."
 },
 skip: "Skip to content",
 language: {
-selectAria: "Choose language"
+navAria: "Choose language"
 },
-actions: {
-download: "Installation",
-release: "Latest Release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Light",
+labelDark: "Dark",
+ariaAuto: "Theme: automatic",
+ariaLight: "Theme: light",
+ariaDark: "Theme: dark"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Tell visitors when their browser is too old.",
-lead: "WP BrowserUpdate adds a clear browser update notice to WordPress. You set the browser limits, the text and the links; the plugin keeps the visitor-facing files on your own site."
+title: "A clear notice when a browser is out of date.",
+lead: "WP BrowserUpdate helps WordPress sites warn people when a browser is too old for the intended site experience.",
+support: "Site owners define the support threshold. The plugin handles the notice, the wording and the visitor-facing files from the WordPress site."
 },
-visitors: {
-title: "What visitors see",
-lead: "A short, direct notice appears only when a visitor uses a browser below your configured threshold.",
-notice: {
-title: "A clear update prompt",
-body: "The notice explains that the browser is outdated and points people to a current browser download."
+preview: {
+title: "Your browser is out of date.",
+body: "Please update your browser to use this website safely and comfortably.",
+action: "Update browser"
 },
-timing: {
-title: "Only when needed",
-body: "Modern browsers stay out of the flow. Older browsers get the nudge you chose."
+story: {
+title: "Start with the visitor, not the browser list.",
+lead: "The plugin covers a simple situation: someone opens a site with an outdated browser, and the site can offer a useful next step without disturbing everyone else.",
+detect: {
+title: "Check browser support",
+body: "Supported browser versions can be defined with defaults, major versions or exact dotted versions when that level of control is needed."
 },
-page: {
-title: "No third-party runtime request",
-body: "The public page loads the packaged runtime from your WordPress installation."
+explain: {
+title: "Explain the issue",
+body: "A short notice can use site-specific text and browser download targets, so visitors are not left to guess."
+},
+stay: {
+title: "Stay in WordPress",
+body: "The notice is configured from a normal settings screen and can be tested before it appears for real traffic."
 }
 },
-local: {
-title: "Built for stricter sites",
-lead: "Many sites use CSPs, privacy tools or tracker blocking. WP BrowserUpdate avoids a common failure point by serving the notification assets from the same site as the page.",
-sameOrigin: "Same-origin scripts and styles for the browser notice.",
-control: "Configuration stays in the WordPress admin area.",
-upstream: "browser-update.org remains credited as the upstream notification project."
+runtime: {
+title: "Built to avoid avoidable frontend surprises.",
+lead: "The browser notice runtime is bundled with the plugin, so the public page does not need to fetch the notice scripts or styles from browser-update.org.",
+sameOrigin: "Visitor-facing runtime files load from the WordPress site.",
+csp: "This is friendlier to strict Content Security Policies and tracker blockers.",
+credit: "browser-update.org remains the credited upstream project for the notification runtime."
 },
 configure: {
-title: "Control the notice",
-lead: "Keep the default setup simple, or tune the details when your audience needs stricter browser guidance.",
-versions: {
+title: "Control the notice without turning it into a project.",
+lead: "Most sites can keep the defaults. When more precision is needed, the settings stay focused on decisions a site owner can understand.",
+thresholds: {
 title: "Browser thresholds",
-body: "Set defaults, major versions, negative offsets or exact dotted versions such as 137.0.3912.63."
+body: "Defaults, major versions, negative offsets and exact dotted versions such as 137.0.3912.63 are supported."
 },
-edge: {
-title: "Edge and Internet Explorer",
-body: "Treat modern Edge separately from legacy Internet Explorer."
+targets: {
+title: "Separate targets",
+body: "Modern Edge, legacy Internet Explorer and additional browser targets can be handled separately."
 },
-test: {
-title: "Test mode",
-body: "Force the notice while setting up, then turn test mode off for real traffic."
+reminders: {
+title: "Reminder rhythm",
+body: "The reappearance delay controls when a dismissed notice may return for the same visitor."
 },
-style: {
-title: "Styling",
-body: "Add site-specific CSS without printing raw style blocks into the page."
-},
-text: {
-title: "Text and links",
-body: "Adjust the wording and browser download targets for your visitors."
+appearance: {
+title: "Text and appearance",
+body: "Wording, links and site-specific CSS can be adjusted without printing raw style blocks into the page."
 },
 admin: {
 title: "Native admin screen",
-body: "Use a focused WordPress settings page, not a separate dashboard."
+body: "Configuration stays in one focused WordPress settings page instead of a separate dashboard."
 },
-reminder: {
-title: "Reminder rhythm",
-body: "Choose how soon the notice can reappear after a visitor has seen it."
-},
-coverage: {
-title: "Audience coverage",
-body: "Decide how the notice handles mobile, insecure or unsupported browsers."
+testing: {
+title: "Safe testing",
+body: "Test mode can force the notice during setup and is disabled again before real visitors see the site."
 }
 },
 links: {
-title: "Install the plugin. Keep the source visible.",
-lead: "Use WordPress.org for normal installation and updates. Use GitHub for release notes, source review and issue tracking.",
+title: "Install from WordPress.org. Review the source on GitHub.",
+lead: "For normal WordPress installation and updates, use the plugin directory. For source review and issue tracking, use the GitHub repository.",
 wordpress: "Open WordPress.org",
-repo: "Open GitHub",
-note: "Requires WordPress 6.0 or newer and PHP 7.4 or newer. The browser notice runtime is packaged with the plugin and documented in the assets."
+github: "Open GitHub",
+note: "Requires WordPress 6.0 or newer and PHP 7.4 or newer."
 },
 footer: {
-copy: "WP BrowserUpdate by MacSteini."
+navAria: "Footer",
+top: "Back to top",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 },
 "de-DE": {
 meta: {
 title: "WP BrowserUpdate für WordPress",
-description: "WP BrowserUpdate zeigt kontrollierte Browser-Update-Hinweise in WordPress und lädt die sichtbaren Runtime-Dateien von der eigenen Website.",
-ogDescription: "Kontrollierte Browser-Update-Hinweise für WordPress mit lokalen Runtime-Dateien und klaren Einstellungen."
+description: "WP BrowserUpdate hilft WordPress-Websites, klare Update-Hinweise für Besucher mit veralteten Browsern zu zeigen.",
+ogDescription: "Ein fokussiertes WordPress-Plugin für Browser-Update-Hinweise, lokale Runtime-Dateien und verständliche Einstellungen."
 },
 skip: "Zum Inhalt springen",
 language: {
-selectAria: "Sprache auswählen"
+navAria: "Sprache auswählen"
 },
-actions: {
-download: "Installation",
-release: "Neuestes Release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Hell",
+labelDark: "Dunkel",
+ariaAuto: "Darstellung: automatisch",
+ariaLight: "Darstellung: hell",
+ariaDark: "Darstellung: dunkel"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Sag Besuchern, wenn ihr Browser zu alt ist.",
-lead: "WP BrowserUpdate ergänzt WordPress um einen klaren Browser-Update-Hinweis. Du bestimmst Browsergrenzen, Text und Links; die sichtbaren Dateien lädt das Plugin von deiner eigenen Website."
+title: "Ein klarer Hinweis, wenn ein Browser zu alt ist.",
+lead: "WP BrowserUpdate hilft WordPress-Websites, Besucher zu informieren, wenn ein Browser zu alt für die gewünschte Nutzung ist.",
+support: "Website-Betreiber legen die Support-Grenze fest. Das Plugin kümmert sich um Hinweis, Texte und sichtbare Dateien von der WordPress-Website."
 },
-visitors: {
-title: "Was Besucher sehen",
-lead: "Ein kurzer, direkter Hinweis erscheint nur dann, wenn ein Browser unter deiner eingestellten Grenze liegt.",
-notice: {
-title: "Ein klarer Update-Hinweis",
-body: "Der Hinweis erklärt, dass der Browser veraltet ist, und führt zu einem aktuellen Browser-Download."
+preview: {
+title: "Dein Browser ist veraltet.",
+body: "Bitte aktualisiere deinen Browser, um diese Website sicher und komfortabel zu nutzen.",
+action: "Browser aktualisieren"
 },
-timing: {
-title: "Nur wenn es nötig ist",
-body: "Moderne Browser bleiben unbehelligt. Alte Browser bekommen den Hinweis, den du festlegst."
+story: {
+title: "Erst der Besucher, dann die Browserliste.",
+lead: "Die Situation ist einfach: Jemand öffnet eine Website mit einem veralteten Browser, und die Seite bietet einen sinnvollen nächsten Schritt an, ohne alle anderen zu stören.",
+detect: {
+title: "Browser-Support prüfen",
+body: "Unterstützte Browser-Versionen lassen sich über Defaults, Major-Versionen oder exakte dotted Versionsnummern festlegen."
 },
-page: {
-title: "Keine externe Runtime-Anfrage",
-body: "Die öffentliche Seite lädt die mitgelieferte Runtime aus deiner WordPress-Installation."
+explain: {
+title: "Problem erklären",
+body: "Ein kurzer Hinweis kann Website-spezifische Texte und Browser-Download-Ziele verwenden, damit Besucher nicht raten müssen."
+},
+stay: {
+title: "In WordPress bleiben",
+body: "Der Hinweis wird über eine normale Einstellungsseite konfiguriert und kann vor echtem Traffic getestet werden."
 }
 },
-local: {
-title: "Für strengere Websites gebaut",
-lead: "Viele Websites nutzen CSPs, Privacy-Tools oder Tracker-Blocker. WP BrowserUpdate vermeidet eine typische Fehlerquelle, indem die Hinweisdateien vom selben Ursprung wie die Seite geladen werden.",
-sameOrigin: "Scripts und Styles für den Browser-Hinweis vom selben Ursprung.",
-control: "Die Konfiguration bleibt im WordPress-Adminbereich.",
-upstream: "browser-update.org bleibt als Upstream-Projekt der Hinweislogik genannt."
+runtime: {
+title: "Gebaut, um vermeidbare Frontend-Probleme zu vermeiden.",
+lead: "Die Runtime für den Browser-Hinweis ist im Plugin enthalten. Die öffentliche Seite muss die Hinweis-Skripte und Styles daher nicht von browser-update.org laden.",
+sameOrigin: "Die sichtbaren Runtime-Dateien laden von der WordPress-Website.",
+csp: "Das ist freundlicher für strikte Content Security Policies und Tracker-Blocker.",
+credit: "browser-update.org bleibt als Upstream-Projekt der Hinweis-Runtime genannt."
 },
 configure: {
-title: "Den Hinweis steuern",
-lead: "Starte mit einfachen Standardwerten oder stelle Details ein, wenn deine Zielgruppe strengere Browsergrenzen braucht.",
-versions: {
+title: "Hinweis steuern, ohne ein Projekt daraus zu machen.",
+lead: "Für viele Websites reichen die Defaults. Wenn mehr Präzision nötig ist, bleiben die Einstellungen auf verständliche Entscheidungen fokussiert.",
+thresholds: {
 title: "Browsergrenzen",
-body: "Nutze Standardwerte, Hauptversionen, negative Abstände oder exakte Versionen wie 137.0.3912.63."
+body: "Defaults, Major-Versionen, negative Offsets und exakte dotted Versionen wie 137.0.3912.63 werden unterstützt."
 },
-edge: {
-title: "Edge und Internet Explorer",
-body: "Behandle modernes Edge getrennt vom alten Internet Explorer."
+targets: {
+title: "Getrennte Ziele",
+body: "Moderner Edge, alter Internet Explorer und zusätzliche Browserziele können separat behandelt werden."
 },
-test: {
-title: "Testmodus",
-body: "Erzwinge den Hinweis beim Einrichten und schalte den Testmodus danach für echte Besucher aus."
+reminders: {
+title: "Erinnerungsrhythmus",
+body: "Der Erinnerungsabstand steuert, wann ein geschlossener Hinweis für denselben Besucher wieder erscheinen darf."
 },
-style: {
-title: "Styling",
-body: "Ergänze eigenes CSS, ohne rohe Style-Blöcke in die Seite zu drucken."
-},
-text: {
-title: "Text und Links",
-body: "Passe Wortlaut und Browser-Downloadziele an deine Besucher an."
+appearance: {
+title: "Text und Darstellung",
+body: "Wortlaut, Links und Website-CSS lassen sich anpassen, ohne rohe Style-Blöcke in die Seite zu schreiben."
 },
 admin: {
-title: "Native Adminseite",
-body: "Nutze eine fokussierte WordPress-Einstellungsseite statt eines eigenen Dashboards."
+title: "Native Admin-Seite",
+body: "Die Konfiguration bleibt in einer fokussierten WordPress-Einstellungsseite statt in einem separaten Dashboard."
 },
-reminder: {
-title: "Erinnerungsrhythmus",
-body: "Lege fest, wann der Hinweis nach dem ersten Anzeigen wieder erscheinen darf."
-},
-coverage: {
-title: "Zielgruppenabdeckung",
-body: "Bestimme, wie der Hinweis mit mobilen, unsicheren oder nicht unterstützten Browsern umgeht."
+testing: {
+title: "Sicher testen",
+body: "Der Testmodus kann den Hinweis beim Einrichten erzwingen und wird vor echtem Traffic wieder deaktiviert."
 }
 },
 links: {
-title: "Plugin installieren. Quelle prüfen.",
-lead: "Für normale Installation und Updates ist WordPress.org der richtige Weg. GitHub dient für Release Notes, Quellcodeprüfung und Issues.",
+title: "Über WordPress.org installieren. Quellcode auf GitHub prüfen.",
+lead: "Für normale Installation und Updates ist das Plugin-Verzeichnis der richtige Weg. Für Quellcodeprüfung und Issues dient das GitHub-Repository.",
 wordpress: "WordPress.org öffnen",
-repo: "GitHub öffnen",
-note: "Erfordert WordPress 6.0 oder neuer und PHP 7.4 oder neuer. Die Browser-Hinweis-Runtime ist im Plugin enthalten und in den Assets dokumentiert."
+github: "GitHub öffnen",
+note: "Erfordert WordPress 6.0 oder neuer und PHP 7.4 oder neuer."
 },
 footer: {
-copy: "WP BrowserUpdate von MacSteini."
+navAria: "Footer",
+top: "Nach oben",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 },
 "it-IT": {
 meta: {
 title: "WP BrowserUpdate per WordPress",
-description: "WP BrowserUpdate mostra avvisi controllati di aggiornamento del browser in WordPress e carica gli asset runtime dal tuo sito.",
-ogDescription: "Avvisi controllati di aggiornamento del browser per WordPress con asset runtime locali e impostazioni chiare."
+description: "WP BrowserUpdate aiuta i siti WordPress a mostrare avvisi chiari ai visitatori che usano browser obsoleti.",
+ogDescription: "Un plugin WordPress mirato per avvisi di aggiornamento del browser, file runtime locali e impostazioni pratiche."
 },
 skip: "Vai al contenuto",
 language: {
-selectAria: "Scegli lingua"
+navAria: "Scegli lingua"
 },
-actions: {
-download: "Installazione",
-release: "Ultima release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Chiaro",
+labelDark: "Scuro",
+ariaAuto: "Tema: automatico",
+ariaLight: "Tema: chiaro",
+ariaDark: "Tema: scuro"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Avvisa i visitatori quando il browser è troppo vecchio.",
-lead: "WP BrowserUpdate aggiunge a WordPress un avviso chiaro per aggiornare il browser. Imposti limiti, testo e link; il plugin carica i file visibili dal tuo sito."
+title: "Un avviso chiaro quando un browser è obsoleto.",
+lead: "WP BrowserUpdate aiuta i siti WordPress ad avvisare quando un browser è troppo vecchio per l'esperienza prevista.",
+support: "I gestori del sito definiscono la soglia di supporto. Il plugin gestisce avviso, testi e file visibili ai visitatori dal sito WordPress."
 },
-visitors: {
-title: "Cosa vedono i visitatori",
-lead: "Un avviso breve e diretto appare solo quando un browser è sotto la soglia configurata.",
-notice: {
-title: "Un avviso chiaro",
-body: "L’avviso spiega che il browser è obsoleto e porta a un download aggiornato."
+preview: {
+title: "Il tuo browser non è aggiornato.",
+body: "Aggiorna il browser per usare questo sito in modo sicuro e comodo.",
+action: "Aggiorna il browser"
 },
-timing: {
-title: "Solo quando serve",
-body: "I browser moderni non vengono disturbati. Quelli vecchi ricevono il messaggio che hai scelto."
+story: {
+title: "Parti dal visitatore, non dall'elenco dei browser.",
+lead: "La situazione è semplice: qualcuno apre un sito con un browser obsoleto e il sito offre un passo utile senza disturbare tutti gli altri.",
+detect: {
+title: "Verifica il supporto browser",
+body: "Le versioni di browser supportate possono essere definite con valori predefiniti, versioni principali o versioni puntuali complete."
 },
-page: {
-title: "Nessuna richiesta runtime esterna",
-body: "La pagina pubblica carica il runtime incluso dalla tua installazione WordPress."
+explain: {
+title: "Spiega il problema",
+body: "Un breve avviso può usare testi e link di download specifici del sito, senza lasciare il visitatore nel dubbio."
+},
+stay: {
+title: "Resta in WordPress",
+body: "L'avviso si configura da una normale schermata impostazioni e può essere testato prima del traffico reale."
 }
 },
-local: {
-title: "Pensato per siti più rigorosi",
-lead: "Molti siti usano CSP, strumenti privacy o blocchi anti-tracker. WP BrowserUpdate evita un punto di rottura comune servendo gli asset di avviso dallo stesso sito della pagina.",
-sameOrigin: "Script e stili same-origin per l’avviso del browser.",
-control: "La configurazione resta nell’area admin di WordPress.",
-upstream: "browser-update.org resta citato come progetto upstream della logica di avviso."
+runtime: {
+title: "Pensato per evitare sorprese inutili nel frontend.",
+lead: "Il runtime dell'avviso browser è incluso nel plugin, quindi la pagina pubblica non deve caricare script o stili da browser-update.org.",
+sameOrigin: "I file runtime visibili ai visitatori vengono caricati dal sito WordPress.",
+csp: "Questo è più adatto a Content Security Policy strette e blocchi anti-tracker.",
+credit: "browser-update.org resta indicato come progetto upstream del runtime di notifica."
 },
 configure: {
-title: "Controlla l’avviso",
-lead: "Mantieni la configurazione semplice oppure regola i dettagli quando il tuo pubblico richiede limiti browser più severi.",
-versions: {
+title: "Controlla l'avviso senza trasformarlo in un progetto.",
+lead: "La maggior parte dei siti può mantenere i valori predefiniti. Quando serve più precisione, le impostazioni restano comprensibili.",
+thresholds: {
 title: "Soglie browser",
-body: "Usa valori predefiniti, versioni principali, offset negativi o versioni esatte come 137.0.3912.63."
+body: "Sono supportati valori predefiniti, versioni principali, offset negativi e versioni puntuali come 137.0.3912.63."
 },
-edge: {
-title: "Edge e Internet Explorer",
-body: "Gestisci Edge moderno separatamente dal vecchio Internet Explorer."
+targets: {
+title: "Target separati",
+body: "Edge moderno, Internet Explorer legacy e altri browser possono essere gestiti separatamente."
 },
-test: {
-title: "Modalità test",
-body: "Forza l’avviso durante la configurazione, poi disattiva il test per il traffico reale."
+reminders: {
+title: "Ritmo dei promemoria",
+body: "Il ritmo dei promemoria controlla quando un avviso chiuso può riapparire allo stesso visitatore."
 },
-style: {
-title: "Stile",
-body: "Aggiungi CSS specifico del sito senza stampare blocchi style grezzi nella pagina."
-},
-text: {
-title: "Testo e link",
-body: "Adatta il testo e le destinazioni di download dei browser ai tuoi visitatori."
+appearance: {
+title: "Testi e aspetto",
+body: "Testi, link e CSS del sito possono essere adattati senza stampare blocchi di stile grezzi nella pagina."
 },
 admin: {
 title: "Schermata admin nativa",
-body: "Usa una pagina impostazioni WordPress mirata, non una dashboard separata."
+body: "La configurazione resta in una pagina impostazioni WordPress mirata, non in una dashboard separata."
 },
-reminder: {
-title: "Ritmo del promemoria",
-body: "Scegli dopo quanto tempo l’avviso può riapparire dopo essere stato visto."
-},
-coverage: {
-title: "Copertura del pubblico",
-body: "Decidi come l’avviso gestisce browser mobili, non sicuri o non supportati."
+testing: {
+title: "Test sicuro",
+body: "La modalità test può forzare l'avviso durante la configurazione e viene disattivata prima del traffico reale."
 }
 },
 links: {
-title: "Installa il plugin. Controlla il codice.",
-lead: "Usa WordPress.org per installazione e aggiornamenti normali. GitHub serve per note di rilascio, revisione del codice e issue.",
+title: "Installa da WordPress.org. Controlla il sorgente su GitHub.",
+lead: "Per installazione e aggiornamenti normali usa la directory dei plugin. Per revisione del codice e issue usa il repository GitHub.",
 wordpress: "Apri WordPress.org",
-repo: "Apri GitHub",
-note: "Richiede WordPress 6.0 o superiore e PHP 7.4 o superiore. Il runtime dell’avviso browser è incluso nel plugin e documentato negli asset."
+github: "Apri GitHub",
+note: "Richiede WordPress 6.0 o successivo e PHP 7.4 o successivo."
 },
 footer: {
-copy: "WP BrowserUpdate di MacSteini."
+navAria: "Footer",
+top: "Torna su",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 },
 "es-ES": {
 meta: {
 title: "WP BrowserUpdate para WordPress",
-description: "WP BrowserUpdate muestra avisos controlados de actualización del navegador en WordPress y carga los archivos runtime desde tu sitio.",
-ogDescription: "Avisos controlados de actualización del navegador para WordPress con runtime local y ajustes claros."
+description: "WP BrowserUpdate ayuda a los sitios WordPress a mostrar avisos claros a visitantes con navegadores obsoletos.",
+ogDescription: "Un plugin de WordPress centrado en avisos de actualización del navegador, archivos runtime locales y ajustes prácticos."
 },
 skip: "Saltar al contenido",
 language: {
-selectAria: "Elegir idioma"
+navAria: "Elegir idioma"
 },
-actions: {
-download: "Instalación",
-release: "Última release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Claro",
+labelDark: "Oscuro",
+ariaAuto: "Tema: automático",
+ariaLight: "Tema: claro",
+ariaDark: "Tema: oscuro"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Avisa cuando el navegador del visitante es demasiado antiguo.",
-lead: "WP BrowserUpdate añade a WordPress un aviso claro para actualizar el navegador. Tú defines límites, texto y enlaces; el plugin carga los archivos visibles desde tu propio sitio."
+title: "Un aviso claro cuando un navegador está obsoleto.",
+lead: "WP BrowserUpdate ayuda a los sitios WordPress a avisar cuando un navegador es demasiado antiguo para la experiencia prevista.",
+support: "Los responsables del sitio definen el umbral de compatibilidad. El plugin gestiona el aviso, los textos y los archivos visibles desde el sitio WordPress."
 },
-visitors: {
-title: "Qué ven los visitantes",
-lead: "Aparece un aviso breve y directo solo cuando un navegador está por debajo del umbral configurado.",
-notice: {
-title: "Un aviso claro",
-body: "El aviso explica que el navegador está obsoleto y lleva a una descarga actual."
+preview: {
+title: "Tu navegador está desactualizado.",
+body: "Actualiza tu navegador para usar este sitio de forma segura y cómoda.",
+action: "Actualizar navegador"
 },
-timing: {
-title: "Solo cuando hace falta",
-body: "Los navegadores modernos no se interrumpen. Los antiguos reciben el aviso que elegiste."
+story: {
+title: "Empieza por la persona visitante, no por la lista de navegadores.",
+lead: "La situación es sencilla: alguien abre un sitio con un navegador antiguo y el sitio ofrece un siguiente paso útil sin molestar al resto.",
+detect: {
+title: "Comprobar compatibilidad",
+body: "Las versiones de navegador admitidas pueden definirse con valores por defecto, versiones principales o versiones exactas."
 },
-page: {
-title: "Sin petición runtime externa",
-body: "La página pública carga el runtime incluido desde tu instalación de WordPress."
+explain: {
+title: "Explica el problema",
+body: "Un aviso breve puede usar textos y destinos de descarga propios del sitio, para que la persona no tenga que adivinar."
+},
+stay: {
+title: "Quédate en WordPress",
+body: "El aviso se configura desde una pantalla normal de ajustes y puede probarse antes del tráfico real."
 }
 },
-local: {
-title: "Preparado para sitios más estrictos",
-lead: "Muchos sitios usan CSP, herramientas de privacidad o bloqueadores de rastreo. WP BrowserUpdate evita un fallo habitual al servir los archivos del aviso desde el mismo sitio que la página.",
-sameOrigin: "Scripts y estilos same-origin para el aviso del navegador.",
-control: "La configuración permanece en el área de administración de WordPress.",
-upstream: "browser-update.org sigue acreditado como proyecto upstream de la lógica de aviso."
+runtime: {
+title: "Preparado para evitar sorpresas innecesarias en el frontend.",
+lead: "El runtime del aviso está incluido en el plugin, por lo que la página pública no necesita cargar scripts ni estilos desde browser-update.org.",
+sameOrigin: "Los archivos runtime visibles para visitantes se cargan desde el sitio WordPress.",
+csp: "Esto encaja mejor con Content Security Policies estrictas y bloqueadores de rastreadores.",
+credit: "browser-update.org sigue acreditado como proyecto upstream del runtime de notificación."
 },
 configure: {
-title: "Controla el aviso",
-lead: "Mantén la configuración sencilla o ajusta los detalles cuando tu audiencia necesite límites de navegador más estrictos.",
-versions: {
+title: "Controla el aviso sin convertirlo en un proyecto.",
+lead: "La mayoría de los sitios pueden conservar los valores por defecto. Cuando hace falta más precisión, los ajustes siguen siendo comprensibles.",
+thresholds: {
 title: "Umbrales de navegador",
-body: "Usa valores predeterminados, versiones mayores, desplazamientos negativos o versiones exactas como 137.0.3912.63."
+body: "Se admiten valores por defecto, versiones principales, offsets negativos y versiones exactas como 137.0.3912.63."
 },
-edge: {
-title: "Edge e Internet Explorer",
-body: "Trata Edge moderno por separado del Internet Explorer heredado."
+targets: {
+title: "Destinos separados",
+body: "Edge moderno, Internet Explorer heredado y otros navegadores pueden gestionarse por separado."
 },
-test: {
-title: "Modo de prueba",
-body: "Fuerza el aviso durante la configuración y desactívalo después para el tráfico real."
+reminders: {
+title: "Ritmo de recordatorio",
+body: "El ritmo de recordatorio controla cuándo puede volver a aparecer un aviso cerrado para la misma persona."
 },
-style: {
-title: "Estilo",
-body: "Añade CSS específico del sitio sin imprimir bloques style sin procesar en la página."
-},
-text: {
-title: "Texto y enlaces",
-body: "Ajusta el texto y los destinos de descarga del navegador para tus visitantes."
+appearance: {
+title: "Texto y apariencia",
+body: "Los textos, enlaces y CSS del sitio pueden ajustarse sin imprimir bloques de estilo sin procesar en la página."
 },
 admin: {
-title: "Pantalla admin nativa",
-body: "Usa una página de ajustes de WordPress enfocada, no un panel separado."
+title: "Pantalla nativa de administración",
+body: "La configuración permanece en una página de ajustes de WordPress enfocada, no en un panel separado."
 },
-reminder: {
-title: "Ritmo del recordatorio",
-body: "Elige cuándo puede volver a aparecer el aviso después de que un visitante lo haya visto."
-},
-coverage: {
-title: "Cobertura del público",
-body: "Decide cómo trata el aviso navegadores móviles, inseguros o no compatibles."
+testing: {
+title: "Pruebas seguras",
+body: "El modo de prueba puede forzar el aviso durante la configuración y se desactiva antes del tráfico real."
 }
 },
 links: {
-title: "Instala el plugin. Revisa la fuente.",
-lead: "Usa WordPress.org para instalación y actualizaciones normales. GitHub sirve para notas de versión, revisión de código e incidencias.",
+title: "Instala desde WordPress.org. Revisa el código en GitHub.",
+lead: "Para instalación y actualizaciones normales usa el directorio de plugins. Para revisar el código e informar issues usa el repositorio de GitHub.",
 wordpress: "Abrir WordPress.org",
-repo: "Abrir GitHub",
-note: "Requiere WordPress 6.0 o superior y PHP 7.4 o superior. El runtime del aviso del navegador está incluido en el plugin y documentado en los assets."
+github: "Abrir GitHub",
+note: "Requiere WordPress 6.0 o superior y PHP 7.4 o superior."
 },
 footer: {
-copy: "WP BrowserUpdate de MacSteini."
+navAria: "Pie de página",
+top: "Volver arriba",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 },
 "fr-FR": {
 meta: {
 title: "WP BrowserUpdate pour WordPress",
-description: "WP BrowserUpdate affiche des avis contrôlés de mise à jour du navigateur dans WordPress et charge les fichiers runtime depuis votre site.",
-ogDescription: "Avis contrôlés de mise à jour du navigateur pour WordPress avec runtime local et réglages clairs."
+description: "WP BrowserUpdate aide les sites WordPress à afficher des messages clairs aux visiteurs utilisant un navigateur obsolète.",
+ogDescription: "Un plugin WordPress ciblé pour les messages de mise à jour du navigateur, les fichiers runtime locaux et des réglages pratiques."
 },
 skip: "Aller au contenu",
 language: {
-selectAria: "Choisir la langue"
+navAria: "Choisir la langue"
 },
-actions: {
-download: "Installation",
-release: "Dernière release"
+theme: {
+labelAuto: "Auto",
+labelLight: "Clair",
+labelDark: "Sombre",
+ariaAuto: "Thème : automatique",
+ariaLight: "Thème : clair",
+ariaDark: "Thème : sombre"
 },
 hero: {
-note: "WordPress Plugin",
-title: "Prévenez les visiteurs quand leur navigateur est trop ancien.",
-lead: "WP BrowserUpdate ajoute à WordPress un avis clair de mise à jour du navigateur. Vous définissez les limites, le texte et les liens; l’extension charge les fichiers visibles depuis votre propre site."
+title: "Un message clair quand un navigateur est trop ancien.",
+lead: "WP BrowserUpdate aide les sites WordPress à prévenir les personnes lorsqu'un navigateur est trop ancien pour l'expérience prévue.",
+support: "Les responsables du site définissent le seuil de prise en charge. Le plugin gère le message, les textes et les fichiers visibles depuis le site WordPress."
 },
-visitors: {
-title: "Ce que voient les visiteurs",
-lead: "Un avis court et direct apparaît uniquement lorsqu’un navigateur passe sous le seuil configuré.",
-notice: {
-title: "Un avis clair",
-body: "L’avis explique que le navigateur est obsolète et renvoie vers un téléchargement actuel."
+preview: {
+title: "Votre navigateur est obsolète.",
+body: "Veuillez mettre à jour votre navigateur pour utiliser ce site de manière sûre et confortable.",
+action: "Mettre à jour le navigateur"
 },
-timing: {
-title: "Seulement si nécessaire",
-body: "Les navigateurs modernes ne sont pas interrompus. Les anciens reçoivent l’avis que vous avez choisi."
+story: {
+title: "Commencez par le visiteur, pas par la liste des navigateurs.",
+lead: "La situation est simple : quelqu'un ouvre un site avec un navigateur ancien, et le site propose une suite utile sans gêner les autres visiteurs.",
+detect: {
+title: "Vérifier la prise en charge",
+body: "Les versions de navigateurs prises en charge peuvent être définies avec des valeurs par défaut, des versions majeures ou des versions exactes."
 },
-page: {
-title: "Aucune requête runtime externe",
-body: "La page publique charge le runtime inclus depuis votre installation WordPress."
+explain: {
+title: "Expliquer le problème",
+body: "Un court message peut utiliser des textes et des liens de téléchargement propres au site, afin de ne pas laisser les visiteurs deviner."
+},
+stay: {
+title: "Rester dans WordPress",
+body: "Le message se configure depuis un écran de réglages classique et peut être testé avant le trafic réel."
 }
 },
-local: {
-title: "Pensé pour les sites plus stricts",
-lead: "De nombreux sites utilisent des CSP, des outils de confidentialité ou des bloqueurs de traqueurs. WP BrowserUpdate évite un point de panne fréquent en servant les fichiers d’avis depuis le même site que la page.",
-sameOrigin: "Scripts et styles same-origin pour l’avis navigateur.",
-control: "La configuration reste dans l’administration WordPress.",
-upstream: "browser-update.org reste crédité comme projet upstream de la logique d’avis."
+runtime: {
+title: "Conçu pour éviter les surprises inutiles côté frontend.",
+lead: "Le runtime du message navigateur est inclus dans le plugin. La page publique n'a donc pas besoin de charger les scripts ou les styles depuis browser-update.org.",
+sameOrigin: "Les fichiers runtime visibles par les visiteurs se chargent depuis le site WordPress.",
+csp: "C'est plus adapté aux Content Security Policies strictes et aux bloqueurs de trackers.",
+credit: "browser-update.org reste crédité comme projet upstream du runtime de notification."
 },
 configure: {
-title: "Contrôlez l’avis",
-lead: "Gardez une configuration simple ou ajustez les détails lorsque votre public nécessite des limites navigateur plus strictes.",
-versions: {
-title: "Seuils navigateur",
-body: "Utilisez les valeurs par défaut, les versions majeures, les décalages négatifs ou des versions exactes comme 137.0.3912.63."
+title: "Contrôler le message sans en faire un projet.",
+lead: "La plupart des sites peuvent garder les réglages par défaut. Quand plus de précision est nécessaire, les réglages restent centrés sur des décisions compréhensibles.",
+thresholds: {
+title: "Seuils de navigateurs",
+body: "Les valeurs par défaut, les versions majeures, les décalages négatifs et les versions exactes comme 137.0.3912.63 sont pris en charge."
 },
-edge: {
-title: "Edge et Internet Explorer",
-body: "Traitez Edge moderne séparément de l’ancien Internet Explorer."
+targets: {
+title: "Cibles séparées",
+body: "Edge moderne, l'ancien Internet Explorer et d'autres navigateurs peuvent être gérés séparément."
 },
-test: {
-title: "Mode test",
-body: "Forcez l’avis pendant la configuration, puis désactivez le test pour le trafic réel."
+reminders: {
+title: "Rythme de rappel",
+body: "Le rythme de rappel contrôle quand un message fermé peut réapparaître pour le même visiteur."
 },
-style: {
-title: "Style",
-body: "Ajoutez du CSS propre au site sans imprimer de blocs style bruts dans la page."
-},
-text: {
-title: "Texte et liens",
-body: "Adaptez le texte et les destinations de téléchargement du navigateur à vos visiteurs."
+appearance: {
+title: "Texte et apparence",
+body: "Les textes, les liens et le CSS du site peuvent être ajustés sans imprimer de blocs de style bruts dans la page."
 },
 admin: {
-title: "Écran admin natif",
-body: "Utilisez une page de réglages WordPress ciblée, pas un tableau de bord séparé."
+title: "Écran d'administration natif",
+body: "La configuration reste dans une page de réglages WordPress ciblée, pas dans un tableau de bord séparé."
 },
-reminder: {
-title: "Rythme de rappel",
-body: "Choisissez quand l’avis peut réapparaître après avoir été vu par un visiteur."
-},
-coverage: {
-title: "Couverture du public",
-body: "Décidez comment l’avis gère les navigateurs mobiles, non sécurisés ou non pris en charge."
+testing: {
+title: "Tests maîtrisés",
+body: "Le mode test peut forcer l'affichage pendant la configuration et se désactive avant le vrai trafic."
 }
 },
 links: {
-title: "Installez l’extension. Vérifiez la source.",
-lead: "Utilisez WordPress.org pour l’installation et les mises à jour normales. GitHub sert aux notes de version, à la revue du code et aux tickets.",
+title: "Installer depuis WordPress.org. Relire le code sur GitHub.",
+lead: "Pour l'installation et les mises à jour normales, utilisez le répertoire des plugins. Pour relire le code et suivre les issues, utilisez le dépôt GitHub.",
 wordpress: "Ouvrir WordPress.org",
-repo: "Ouvrir GitHub",
-note: "Nécessite WordPress 6.0 ou plus récent et PHP 7.4 ou plus récent. Le runtime de l’avis navigateur est inclus dans l’extension et documenté dans les assets."
+github: "Ouvrir GitHub",
+note: "Nécessite WordPress 6.0 ou plus récent et PHP 7.4 ou plus récent."
 },
 footer: {
-copy: "WP BrowserUpdate par MacSteini."
+navAria: "Pied de page",
+top: "Retour en haut",
+wordpress: "WordPress.org",
+github: "GitHub"
 }
 }
 };
-function readPath(source, path) {
-return path.split(".").reduce(function(value, key) {
-return value && Object.prototype.hasOwnProperty.call(value, key) ? value[key] : undefined;
-}, source);
+
+function normaliseLocale(locale) {
+return String(locale || "").replace("_", "-");
 }
-function normaliseLocale(value) {
-if (!value) {
-return "";
+
+function localeFromLanguage(candidate) {
+const normalised = normaliseLocale(candidate);
+if (SUPPORTED_LOCALES.includes(normalised)) {
+return normalised;
 }
-return String(value).replace("_", "-");
-}
-function chooseLocale(candidates) {
-for (const candidate of candidates) {
-const locale = normaliseLocale(candidate);
-if (SUPPORTED_LOCALES.includes(locale)) {
-return locale;
-}
-}
-for (const candidate of candidates) {
-const language = normaliseLocale(candidate).slice(0, 2).toLowerCase();
+const language = normalised.slice(0, 2).toLowerCase();
 if (Object.prototype.hasOwnProperty.call(LANGUAGE_PRIMARY, language)) {
 return LANGUAGE_PRIMARY[language];
+}
+return null;
+}
+
+function initialLocale() {
+const stored = localeFromLanguage(localStorage.getItem(LOCALE_STORAGE_KEY));
+if (stored) {
+return stored;
+}
+const browserLocales = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+for (const candidate of browserLocales) {
+const matched = localeFromLanguage(candidate);
+if (matched) {
+return matched;
 }
 }
 return "en-US";
 }
-function updateMeta(locale, strings) {
-document.documentElement.lang = locale;
-document.body.dataset.locale = locale;
-document.title = strings.meta.title;
-document.querySelector('meta[name="description"]').setAttribute("content", strings.meta.description);
-document.querySelector('meta[property="og:title"]').setAttribute("content", strings.meta.title);
-document.querySelector('meta[property="og:description"]').setAttribute("content", strings.meta.ogDescription);
-document.querySelector('meta[name="twitter:title"]').setAttribute("content", strings.meta.title);
-document.querySelector('meta[name="twitter:description"]').setAttribute("content", strings.meta.ogDescription);
+
+function getPath(source, path) {
+return path.split(".").reduce((value, key) => {
+if (value && Object.prototype.hasOwnProperty.call(value, key)) {
+return value[key];
 }
+return undefined;
+}, source);
+}
+
+function validTheme(mode) {
+return THEME_MODES.includes(mode) ? mode : "auto";
+}
+
+function resolveTheme(mode) {
+if (mode === "light" || mode === "dark") {
+return mode;
+}
+return systemTheme.matches ? "dark" : "light";
+}
+
+function currentLocale() {
+return document.documentElement.lang && LOCALES[document.documentElement.lang] ? document.documentElement.lang : "en-US";
+}
+
+function applyTheme(mode, persist = true) {
+const selectedMode = validTheme(mode);
+const resolvedMode = resolveTheme(selectedMode);
+const root = document.documentElement;
+const strings = LOCALES[currentLocale()].theme;
+root.dataset.theme = selectedMode;
+root.dataset.resolvedTheme = resolvedMode;
+if (persist) {
+localStorage.setItem(THEME_STORAGE_KEY, selectedMode);
+}
+const button = document.querySelector("[data-theme-toggle]");
+const label = document.querySelector("[data-theme-label]");
+if (!button || !label) {
+return;
+}
+const labelKey = `label${selectedMode.charAt(0).toUpperCase()}${selectedMode.slice(1)}`;
+const ariaKey = `aria${selectedMode.charAt(0).toUpperCase()}${selectedMode.slice(1)}`;
+label.textContent = strings[labelKey];
+button.setAttribute("aria-label", strings[ariaKey]);
+}
+
 function applyLocale(locale) {
-const strings = LOCALES[locale] || LOCALES["en-US"];
-updateMeta(locale, strings);
-document.querySelectorAll("[data-i18n]").forEach(function(element) {
-const value = readPath(strings, element.dataset.i18n);
+const selectedLocale = LOCALES[locale] ? locale : "en-US";
+const strings = LOCALES[selectedLocale];
+document.documentElement.lang = selectedLocale;
+document.body.dataset.locale = selectedLocale;
+document.title = strings.meta.title;
+const description = document.querySelector('meta[name="description"]');
+if (description) {
+description.setAttribute("content", strings.meta.description);
+}
+const ogTitle = document.querySelector('meta[property="og:title"]');
+if (ogTitle) {
+ogTitle.setAttribute("content", strings.meta.title);
+}
+const ogDescription = document.querySelector('meta[property="og:description"]');
+if (ogDescription) {
+ogDescription.setAttribute("content", strings.meta.ogDescription);
+}
+const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+if (twitterTitle) {
+twitterTitle.setAttribute("content", strings.meta.title);
+}
+const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+if (twitterDescription) {
+twitterDescription.setAttribute("content", strings.meta.ogDescription);
+}
+document.querySelectorAll("[data-i18n]").forEach((element) => {
+const value = getPath(strings, element.dataset.i18n);
 if (typeof value === "string") {
 element.textContent = value;
 }
 });
-document.querySelectorAll("[data-i18n-attr]").forEach(function(element) {
-element.dataset.i18nAttr.split(";").forEach(function(entry) {
-const parts = entry.split(":");
-const attr = parts[0];
-const key = parts[1];
-const value = readPath(strings, key);
-if (attr && typeof value === "string") {
-element.setAttribute(attr, value);
+document.querySelectorAll("[data-i18n-attr]").forEach((element) => {
+element.dataset.i18nAttr.split(",").forEach((entry) => {
+const [attribute, path] = entry.split(":");
+const value = getPath(strings, path);
+if (attribute && typeof value === "string") {
+element.setAttribute(attribute, value);
 }
 });
 });
-const selector = document.getElementById("language-select");
-if (selector) {
-selector.value = locale;
+document.querySelectorAll("[data-locale]").forEach((button) => {
+const active = button.dataset.locale === selectedLocale;
+button.setAttribute("aria-pressed", active ? "true" : "false");
+});
+applyTheme(validTheme(localStorage.getItem(THEME_STORAGE_KEY)), false);
 }
-}
-function initialLocale() {
-const stored = localStorage.getItem("wpbu-locale");
-const browserLocales = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
-return chooseLocale(stored ? [stored].concat(browserLocales) : browserLocales);
-}
-document.addEventListener("DOMContentLoaded", function() {
-const selector = document.getElementById("language-select");
-applyLocale(initialLocale());
-if (selector) {
-selector.addEventListener("change", function(event) {
-const locale = chooseLocale([event.target.value]);
-localStorage.setItem("wpbu-locale", locale);
+
+function setupLanguageButtons() {
+document.querySelectorAll("[data-locale]").forEach((button) => {
+button.addEventListener("click", () => {
+const locale = localeFromLanguage(button.dataset.locale) || "en-US";
+localStorage.setItem(LOCALE_STORAGE_KEY, locale);
 applyLocale(locale);
 });
+});
+}
+
+function setupThemeButton() {
+const button = document.querySelector("[data-theme-toggle]");
+if (!button) {
+return;
+}
+button.addEventListener("click", () => {
+const current = validTheme(document.documentElement.dataset.theme);
+const nextIndex = (THEME_MODES.indexOf(current) + 1) % THEME_MODES.length;
+applyTheme(THEME_MODES[nextIndex]);
+});
+systemTheme.addEventListener("change", () => {
+if (validTheme(document.documentElement.dataset.theme) === "auto") {
+applyTheme("auto", false);
 }
 });
+}
+
+function setupSmoothScrollTop() {
+const link = document.querySelector("[data-scroll-top]");
+const target = document.getElementById("top");
+if (!link || !target) {
+return;
+}
+link.addEventListener("click", (event) => {
+if (reducedMotion.matches) {
+return;
+}
+event.preventDefault();
+target.scrollIntoView({ behavior: "smooth", block: "start" });
+history.replaceState(null, "", `${location.pathname}${location.search}`);
+});
+}
+
+setupLanguageButtons();
+setupThemeButton();
+setupSmoothScrollTop();
+applyLocale(initialLocale());
+applyTheme(validTheme(localStorage.getItem(THEME_STORAGE_KEY)), false);
