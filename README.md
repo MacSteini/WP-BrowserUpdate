@@ -66,11 +66,11 @@ The active development package lives in `wp-browser-update/trunk/`. Released Wor
 ## Repository layout
 
 ```text
-wp-browser-update/trunk/        current plugin package
-wp-browser-update/tags/         released WordPress snapshots
-site/                           static project page
-README.md                       GitHub-facing project overview
-LICENSE                         project license
+wp-browser-update/trunk/ - current plugin package
+wp-browser-update/tags/ - released WordPress snapshots
+site/ - static project page
+README.md - GitHub-facing project overview
+LICENSE - project license
 ```
 
 GitHub source archives are intentionally scoped through `.gitattributes` so release source downloads contain the plugin package rather than the full repository workspace.
