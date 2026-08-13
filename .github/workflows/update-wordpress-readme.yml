@@ -14,7 +14,7 @@ on:
       stable_tag:
         description: "Existing WordPress.org stable tag directory to update"
         required: true
-        default: "6.0.0"
+        default: "6.0.1"
         type: string
       confirm_update:
         description: "Type CONFIRM_README_METADATA to allow this update"
@@ -63,6 +63,17 @@ jobs:
             echo "Stable tag mismatch. trunk=$trunk_stable_tag tag=$tag_stable_tag expected=$STABLE_TAG"
             exit 1
           fi
+          trunk_tested_up_to=$(awk -F': *' '/^Tested up to:/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' wp-browser-update/trunk/readme.txt)
+          tag_tested_up_to=$(awk -F': *' '/^Tested up to:/ {gsub(/[[:space:]]/, "", $2); print $2; exit}' "wp-browser-update/tags/$STABLE_TAG/readme.txt")
+          if ! printf '%s' "$trunk_tested_up_to" | grep -Eq '^[0-9]+\.[0-9]+$'; then
+            echo "Tested up to must be X.Y, got: $trunk_tested_up_to"
+            exit 1
+          fi
+          if [ "$trunk_tested_up_to" != "$tag_tested_up_to" ]; then
+            echo "Tested up to mismatch. trunk=$trunk_tested_up_to tag=$tag_tested_up_to"
+            exit 1
+          fi
+          echo "TESTED_UP_TO=$trunk_tested_up_to" >> "$GITHUB_ENV"
 
       - name: Checkout WordPress SVN
         env:
@@ -103,4 +114,4 @@ jobs:
             svn diff trunk/readme.txt "tags/$STABLE_TAG/readme.txt"
             exit 0
           fi
-          svn commit -m "Mark WP BrowserUpdate $STABLE_TAG as tested up to WordPress 7.0" --username="$SVN_USERNAME" --password="$SVN_PASSWORD" --non-interactive
+          svn commit -m "Mark WP BrowserUpdate $STABLE_TAG as tested up to WordPress $TESTED_UP_TO" --username="$SVN_USERNAME" --password="$SVN_PASSWORD" --non-interactive

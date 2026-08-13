@@ -3,8 +3,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?label=Release&color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v6.0-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.0-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.0-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.1-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.1-blue)
 [![Licence: GPL3](https://img.shields.io/badge/License-GPL3-green)](https://gnu.org/licenses/gpl)
 
 WP BrowserUpdate is a WordPress plugin that shows a clear update notice when a visitor uses a browser older than the versions a site owner wants to support.
