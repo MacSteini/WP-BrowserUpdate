@@ -3,8 +3,8 @@
 ![GitHub Release](https://img.shields.io/github/v/release/macsteini/wp-browserupdate?label=Release&color=red)
 ![Static Badge](https://img.shields.io/badge/PHP_>=-v7.4-red)
 ![Static Badge](https://img.shields.io/badge/WordPress_>=-v6.0-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.1-blue)
-![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.1-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Tested_Up_To-v7.2-blue)
+![Static Badge](https://img.shields.io/badge/WordPress_Compatible_Up_To-v7.2-blue)
 [![Licence: GPL3](https://img.shields.io/badge/License-GPL3-green)](https://gnu.org/licenses/gpl)
 
 WP BrowserUpdate is a WordPress plugin that shows a clear update notice when a visitor uses a browser older than the versions a site owner wants to support.
@@ -108,10 +108,11 @@ The repository also carries Codex-local validation tooling outside the product p
 
 [`wp-browser-update/trunk/readme.txt`](wp-browser-update/trunk/readme.txt "WordPress.org readme") maintains the WordPress.org changelog.
 
-Current release: **6.0.1**.
+Current release: **6.0.2**.
 
 Recent highlights:
 
+- 6.0.2 adds WordPress 7.2 compatibility metadata and improves translation support for admin messages.
 - 6.0.1 corrects the original plugin source strings to en-US so WordPress.org translations can provide locale-specific variants.
 - 6.0.0 introduces the structured settings model and bundles the visitor-facing browser-update.org runtime for CSP-friendly local loading.
 - 5.0.0 requires PHP 7.4.
@@ -121,7 +122,7 @@ Recent highlights:
 - [WordPress.org plugin page](https://wordpress.org/plugins/wp-browser-update/ "WP BrowserUpdate on WordPress.org")
 - [Project page source](site/index.html "WP BrowserUpdate project page source")
 - [GitHub releases](https://github.com/MacSteini/wp-browserupdate/releases "WP BrowserUpdate releases")
-- [browser-update.org](https://browser-update.org/ "browser-update.org")
+- [browser-update.org](https://browserupdate.org/ "browser-update.org")
 - [WordPress Translation Project](https://translate.wordpress.org/projects/wp-plugins/wp-browser-update "WP BrowserUpdate translations")
 
 ## Contributing

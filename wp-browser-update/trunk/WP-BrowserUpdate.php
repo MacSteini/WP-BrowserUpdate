@@ -3,7 +3,7 @@
 Plugin Name: WP BrowserUpdate
 Plugin URI: https://wpbu.steinbrecher.co/
 Description: This plugin notifies website visitors to update their outdated browser in a non-intrusive way. Visit <a href="https://browserupdate.org/" title="browserupdate.org" target="_blank" rel="noopener noreferrer">browserupdate.org</a> for more information…
-Version: 6.0.1
+Version: 6.0.2
 Author: Marco Steinbrecher
 Author URI: https://profiles.wordpress.org/macsteini
 Requires at least: 6.0
@@ -23,7 +23,8 @@ define('WPBU_OPTIONS_NAME', 'wp_browserupdate_options');
 
 if (version_compare(PHP_VERSION, MIN_PHP_VERSION, '<')) {
 add_action('admin_notices', function () {
-echo '<div class="notice notice-error"><p><strong>'.sprintf(esc_html__('Your PHP v%s is outdated: This plugin requires PHP v%s or higher. Please update your PHP version or %s for compatibility with older PHP versions…', 'wp-browser-update'), esc_html(PHP_VERSION), esc_html(MIN_PHP_VERSION), '<a href="https://downloads.wordpress.org/plugin/wp-browser-update.4.8.1.zip" rel="noopener noreferrer">'.esc_html__('download plugin version 4.8.1', 'wp-browser-update').'</a>').'</strong></p></div>';
+/* translators: 1: Current PHP version, 2: minimum required PHP version, 3: download link for the older plugin. */
+echo '<div class="notice notice-error"><p><strong>'.sprintf(esc_html__('Your PHP v%1$s is outdated: This plugin requires PHP v%2$s or higher. Please update your PHP version or %3$s for compatibility with older PHP versions…', 'wp-browser-update'), esc_html(PHP_VERSION), esc_html(MIN_PHP_VERSION), '<a href="https://downloads.wordpress.org/plugin/wp-browser-update.4.8.1.zip" rel="noopener noreferrer">'.esc_html__('download plugin version 4.8.1', 'wp-browser-update').'</a>').'</strong></p></div>';
 });
 deactivate_plugins(plugin_basename(__FILE__));
 return;
@@ -364,6 +365,7 @@ return $options['custom_css'];
 
 function wpbu_render_custom_css() {
 header('Content-Type: text/css; charset='.get_option('blog_charset'));
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The getter strips HTML tags on read. This response serves the administrator’s stylesheet as text/css.
 echo wpbu_get_custom_css();
 exit;
 }
@@ -391,7 +393,8 @@ add_settings_field('wpbu_link_'.$key, $field['label'], 'wpbu_render_link_field',
 add_settings_section('wpbu_language_text', __('Language and Text', 'wp-browser-update'), 'wpbu_render_language_text_section', 'wp-browserupdate');
 add_settings_field('wpbu_language', __('Fixed language', 'wp-browser-update'), 'wpbu_render_language_field', 'wp-browserupdate', 'wpbu_language_text', array('label_for' => 'wpbu_language'));
 foreach (wpbu_text_fields() as $field) {
-add_settings_field('wpbu_text_'.$field, sprintf(__('Message text: %s', 'wp-browser-update'), $field), 'wpbu_render_text_field', 'wp-browserupdate', 'wpbu_language_text', array('key' => $field, 'label_for' => 'wpbu_text_'.$field));
+/* translators: %s: Notification message key, such as bupdate or remind. */
+add_settings_field('wpbu_text_'.$field, sprintf(esc_html__('Message text: %s', 'wp-browser-update'), esc_html($field)), 'wpbu_render_text_field', 'wp-browserupdate', 'wpbu_language_text', array('key' => $field, 'label_for' => 'wpbu_text_'.$field));
 }
 add_settings_field('wpbu_text_overrides', __('Language/browser text overrides JSON', 'wp-browser-update'), 'wpbu_render_text_overrides_field', 'wp-browserupdate', 'wpbu_language_text', array('label_for' => 'wpbu_text_overrides'));
 add_settings_section('wpbu_custom_css', __('Custom CSS', 'wp-browser-update'), 'wpbu_render_custom_css_section', 'wp-browserupdate');
@@ -440,10 +443,18 @@ $latest_version = wpbu_getversion_cached($browser['url'], $browser['xpath'], $re
 
 echo '<input type="text" class="regular-text code" pattern="(?:-?[0-9]+|[0-9]+(?:\.[0-9]+)+)" name="'.esc_attr(WPBU_OPTIONS_NAME).'[required]['.esc_attr($key).']" id="'.esc_attr($field_id).'" value="'.esc_attr($selected).'" aria-label="'.esc_attr($browser['name']).'" aria-describedby="'.esc_attr($description_id).'" title="'.esc_attr__('Use a whole number, a positive dotted version, or a negative whole number.', 'wp-browser-update').'" />';
 echo '<p class="description" id="'.esc_attr($description_id).'">';
-if ($required_version===0) echo esc_html__('Detection: show all outdated versions (default)', 'wp-browser-update');
-elseif (is_int($required_version) && $required_version<0) echo sprintf(esc_html__('Detection: latest minus %d major versions', 'wp-browser-update'), abs($required_version));
-elseif (is_string($required_version)) echo sprintf(esc_html__('Detection uses exact version: %s', 'wp-browser-update'), esc_html($required_version));
-else echo sprintf(esc_html__('Detection uses major version: %s', 'wp-browser-update'), esc_html($required_version));
+if ($required_version===0) {
+echo esc_html__('Detection: show all outdated versions (default)', 'wp-browser-update');
+} elseif (is_int($required_version) && $required_version<0) {
+/* translators: %d: Number of major versions behind the latest release. */
+echo esc_html(sprintf(__('Detection: latest minus %d major versions', 'wp-browser-update'), abs($required_version)));
+} elseif (is_string($required_version)) {
+/* translators: %s: Exact browser version, such as 137.0.3912.63. */
+echo sprintf(esc_html__('Detection uses exact version: %s', 'wp-browser-update'), esc_html($required_version));
+} else {
+/* translators: %s: Browser major version, such as 137. */
+echo sprintf(esc_html__('Detection uses major version: %s', 'wp-browser-update'), esc_html($required_version));
+}
 if ($latest_version!=='') echo ' '.esc_html__('– Current version:', 'wp-browser-update').' '.esc_html($latest_version);
 echo '</p>';
 }
@@ -518,6 +529,7 @@ $options = wpbu_admin_options();
 $base = WPBU_OPTIONS_NAME.'[text][default]';
 $defaults = wpbu_default_text_values();
 $description_id = 'wpbu_text_'.$key.'_description';
+/* translators: %s: Default notification text for this message field. */
 echo '<input type="text" class="large-text" id="wpbu_text_'.esc_attr($key).'" name="'.esc_attr($base).'['.esc_attr($key).']" value="'.esc_attr($options['text']['default'][$key]).'" aria-describedby="'.esc_attr($description_id).'" /><p class="description" id="'.esc_attr($description_id).'">'.sprintf(esc_html__('Default: %s', 'wp-browser-update'), esc_html($defaults[$key] ?? '')).'</p>';
 }
 
@@ -532,7 +544,8 @@ echo '<p>'.esc_html__('Optional trusted CSS overrides for the bundled notificati
 
 function wpbu_render_custom_css_field() {
 $options = wpbu_admin_options();
-echo '<textarea id="wpbu_custom_css" name="'.esc_attr(WPBU_OPTIONS_NAME).'[custom_css]" rows="15" cols="45" class="large-text code" aria-describedby="wpbu_custom_css_description">'.esc_textarea($options['custom_css']).'</textarea><p class="description" id="wpbu_custom_css_description">'.sprintf(esc_html__('Override the default CSS with your own rules (%sread more%s). Leave blank to use the default.', 'wp-browser-update'), '<a href="https://browserupdate.org/customize.html" target="_blank" rel="noopener noreferrer">', '</a>').'</p>';
+/* translators: 1: Opening link tag for the CSS documentation, 2: closing link tag. */
+echo '<textarea id="wpbu_custom_css" name="'.esc_attr(WPBU_OPTIONS_NAME).'[custom_css]" rows="15" cols="45" class="large-text code" aria-describedby="wpbu_custom_css_description">'.esc_textarea($options['custom_css']).'</textarea><p class="description" id="wpbu_custom_css_description">'.sprintf(esc_html__('Override the default CSS with your own rules (%1$sread more%2$s). Leave blank to use the default.', 'wp-browser-update'), '<a href="https://browserupdate.org/customize.html" target="_blank" rel="noopener noreferrer">', '</a>').'</p>';
 }
 
 function wpbu_render_settings_page() {

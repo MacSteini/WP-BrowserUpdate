@@ -1,11 +1,11 @@
 === WP BrowserUpdate ===
 Contributors: MacSteini
 Tags: Browser, Update, Notice, Outdated, Warning
-Tested up to: 7.1
-Compatible up to: 7.1
+Tested up to: 7.2
+Compatible up to: 7.2
 Requires at least: 6.0
 Requires PHP: 7.4
-Stable tag: 6.0.1
+Stable tag: 6.0.2
 License: GPLv3 or later
 License URI: https://gnu.org/licenses/gpl
 
@@ -80,6 +80,10 @@ If you have already downloaded the ZIP file, you can install it via the WordPres
 5. Once the installation is complete, click **Activate Plugin** to enable it.
 
 == Changelog ==
+= 6.0.2 =
+* Tested with WordPress 7.2 RC3 and PHP 8.6.
+* Improved translation support for browser version descriptions, the custom CSS help link, and the PHP version notice.
+
 = 6.0.1 =
 * Fixed:
     * Corrects the original plugin source strings to en-US so WordPress.org translations can provide locale-specific variants such as en-GB.
